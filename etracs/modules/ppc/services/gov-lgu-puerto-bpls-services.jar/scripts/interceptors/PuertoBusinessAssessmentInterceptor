@@ -1,0 +1,22 @@
+import com.rameses.annotations.*;
+
+class PuertoBusinessAssessmentInterceptor {
+
+	@DataContext('business_receivable')
+	def brec; 
+
+	@After( pattern="BusinessAssessmentService.assess", eval="#{args[0].businessid != null}" ) 
+	public void afterAssess( evt ) {
+		def r = evt.result; 
+
+		if ( r.infos ) {
+			def p = evt.args[0];
+			def list = r.infos.findAll{ it.attribute?.objid=='PREVIOUS_BT' }
+			list.each{ 
+				def a = brec.find([ businessid: p.businessid, iyear: p.appyear-1, lob_objid: it.lob?.objid, taxfeetype:'TAX' ]).first(); 
+				it.defaultvalue = a?.amount; 
+			}
+		}		
+	}
+
+}

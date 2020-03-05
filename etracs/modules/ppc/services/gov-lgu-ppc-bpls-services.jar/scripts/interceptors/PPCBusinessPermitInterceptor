@@ -1,0 +1,37 @@
+import com.rameses.annotations.*; 
+
+class PPCBusinessPermitInterceptor {
+	
+	@DataContext('business_application_task')
+	def apptask_db; 
+
+	@ActiveDB('ppc_bpls_permit') 
+	def permit_db; 
+
+	@Before( pattern="BusinessPermitService.create" ) 
+	public void beforeCreate( evt ) {
+		def param = evt.args[0]; 
+		if ( param.temporary.toString() == 'true') {
+			throw new Exception('Temporary permit is no longer supported'); 
+		}
+
+		def loginfo = permit_db.findReleaseLog([ applicationid: param.applicationid ]);
+		if ( loginfo ) {
+			if ( !loginfo.enddate ) { 
+				throw new Exception('Business Application is not yet completed. Please check the application task logs'); 
+			} 
+			param.dtissued = loginfo.startdate; 
+		}
+	} 
+
+	@After( pattern="BusinessPermitService.getReport" ) 
+	public void afterGetReport( evt ) {
+		def perm = evt.result; 
+		// def em = apptask_db.find([ refid: perm.applicationid, state:'release']); 
+		// def o = em.where('enddate is not null').orderBy('startdate desc').first(); 
+		// perm.dtreleased = ( o ? o.enddate : null ); 
+
+		perm.dtreleased = perm.dtissued; 
+	} 
+
+}
