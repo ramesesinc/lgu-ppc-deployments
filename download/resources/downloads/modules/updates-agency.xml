@@ -1,6 +1,6 @@
 <app>
 <env>
-app.title=ETRACS 2.5 build 05 20200303_1834 (CITY OF PUERTO PRINCESA)
+app.title=ETRACS 2.5 build 05 - 20200303_1834 (ETRACS - OTHER AGENCY)
 app.host=localhost:8070
 app.cluster=osiris3
 app.context=etracs25
@@ -17,73 +17,14 @@ socketio.host=localhost:7080
 entity.app.host=localhost:8070
 entity.app.context=etracs25
 </env>
-<modules> 
-	<!-- modify reports -->
-	<module file="custom/rpt-cancelledfaas.jar" version="1.2"/>
-	<module file="custom/rpt-NOA.jar" version="1.1"/>
-	<module file="custom/rpt-subdivision-report.jar" version="1.2"/>
-	<module file="custom/rpt-consolidation-report.jar" version="1.1"/>
-	
-	<!--2017 modify report -->
-	<module file="custom/LT-compromise-application-letter2.jar" version="1.2"/>
-	<module file="custom/LT-compromise-agreement2.jar" version="1.2"/>
-	<module file="custom/rpt-faas-report.jar" version="1.3"/>
-	<module file="custom/cash-receipt-rpt.jar" version="1.1"/>
-
-	<!--2017 2nd Qtr -->
-	<module file="custom/noproperty.jar" version="1.1"/>
-	<module file="custom/rpt-cert-latest-existing.jar" version="1.1"/>
-	<module file="custom/rpt-verified-faas.jar" version="1.1"/>
-	<module file="custom/rpt-cert-ownership.jar" version="1.1"/>
-	<module file="custom/rpt-cert-NoEncumbrance.jar" version="1.1"/>
-	<module file="custom/rpt-ocular-inspection.jar" version="1.1"/>
-	<module file="custom/rpt-cert-landholding-noimprovement.jar" version="1.1"/>
-	<!--module file="custom/LT-rpt-clearance.jar" version="1.2"/-->
-
-	<!--2018 1nd Qtr -->
-	<!--module file="custom/rpt-bill.jar" version="1.22"/-->
-	<module file="custom/rpt-certification.jar" version="1.3"/>	
-	<module file="custom/rpt-cert-multiple-property.jar" version="1.2"/>	
-	<module file="custom/businesspermit2019.jar" version="1.1"/>
-	<!-- <module file="custom/BP.jar" version="1.1"/> -->
-	<!--module file="custom/lt-NOD.jar" version="1.3"/ dont delete - luwe-->
-		
-	<!--2018 2nd QTR -->
-	<module file="custom/cashreceipt_reprint.jar" version="1.1"/>
-	<module file="custom/rpt_faas_report_mach.jar" version="1.2"/>
-
-	<!--2018 4th QTR -->
-	<!--module file="custom/td_w_condotittle.jar" version="1.6"/-->
-	
-	<!--2019 1st QTR -->
-	<module file="custom/rpt-td-report-2.jar" version="1.52"/>
-
-	<!--2019 2nd QTR -->
-	<module file="custom/LT-SOA.jar" version="1.3"/>
-	<!--module file="custom/LT-taxclearance.jar" version="1.1"/-->
-
-	<!--2020 1st QTR -->
-	<module file="custom/occupation_permit_2020.jar" version="1.3"/>
-	<module file="custom/LT-TaxClearance-2020.jar" version="1.2"/>
-	<module file="custom/LT-NOD-2019-1.jar" version="1.3"/>
-	<module file="custom/LT-Deliquency-Listing.jar" version="1.1"/>
-	<module file="custom/rpt_examination_finding.jar" version="1.1"/>
-
-	<!-- cgpp -->
-	<module file="cgpp/cgpp-gov-acct.jar" version="1.0"/>
-	<module file="cgpp/cgpp-gov-rptis.jar" version="1.0"/>
+<modules>
+	<!-- custom libs -->
 	<module file="cgpp/cgpp-gov-bpls.jar" version="1.0"/>
-	<module file="cgpp/cgpp-gov-treasury.jar" version="1.0"/>
 	<module file="cgpp/cgpp-gov-boss.jar" version="1.0"/>
-	<module file="cgpp/cgpp-gov-occupation.jar" version="1.0"/>
-
 	<module file="custom/gov-lgu-puerto-bpls-report.jar" version="1.11"/>
-	<!--module file="custom/gov-lgu-puerto-rptis-landtax.jar" version="1.6"/-->
 	<module file="custom/gov-lgu-puerto-treasury.jar" version="1.12"/>
 	<module file="custom/gov-lgu-puerto-princesa-main.jar" version="1.6"/>
 	<module file="custom/gov-lgu-ppc-customreport.jar" version="1.1"/>
-	<module file="custom/gov-lgu-ppc-rptis.jar" version="1.0"/>
-	<module file="custom/gov-lgu-ppc-rptis-report.jar" version="3.12"/>
 
 	<!-- 3rd party libs --> 
 	<module file="libs/commons-net-3.5.jar" version="2.5"/>
@@ -127,10 +68,6 @@ entity.app.context=etracs25
 	<module file="etracs/rameses-gov-lgu.jar" version="2.50"/>
 	<module file="etracs/rameses-gov-lgu-treasury.jar" version="2.50"/>
 
-	<!-- epayment -->
-	<module file="epayment/rameses-gov-epayment.jar" version="2.50"/>
-	<module file="epayment/rameses-gov-epayment-report.jar" version="2.50"/>
-
 	<!-- treasury -->
 	<module file="treasury/rameses-treasury-common.jar" version="2.50"/>
 	<module file="treasury/rameses-gov-depositslip.jar" version="2.50"/>
@@ -142,21 +79,8 @@ entity.app.context=etracs25
 	<module file="bpls/rameses-gov-etracs-bpls.jar" version="2.50"/>
 	<module file="bpls/rameses-gov-etracs-bpls-reports.jar" version="2.50"/>
 	<module file="bpls/rameses-gov-etracs-bpls-ceo.jar" version="2.50"/>
-
-	<!-- rptis -->
-	<module file="rptis/rameses-gov-etracs-rptis-landtax.jar" version="2.50"/>
-	<module file="rptis/rameses-gov-etracs-rptis-landtax-report.jar" version="2.50"/>
-	<module file="rptis/rameses-gov-etracs-rptis.jar" version="2.50"/>
-	<module file="rptis/rameses-gov-etracs-rptis-report.jar" version="2.50"/>
-	<module file="rptis/rameses-gov-etracs-rptis-city.jar" version="2.50"/>
-
+  	
 	<!-- queue -->
 	<module file="queue/rameses-queueing.jar" version="2.50"/>
-
-	<!-- ctc -->
-	<module file="v254-ctc/rameses-gov-etracs-ctc.jar" version="2.3"/>
-
-	<!-- vehicle -->
-	<module file="v254-vehicle/rameses-gov-etracs-vehicle.jar" version="1.0"/> 
 </modules>
 </app>
