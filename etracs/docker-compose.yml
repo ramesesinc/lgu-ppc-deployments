@@ -44,3 +44,4 @@ services:
       - ./modules:/apps/etracs25/modules
 
       - ../_custom/cgpp:/apps/etracs25/modules/cgpp
+      - ./dev_modules/rameses-gov-lgu-services.jar:/services/modules/etracs/rameses-gov-lgu-services.jar
