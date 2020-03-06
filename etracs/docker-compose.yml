@@ -43,5 +43,8 @@ services:
       - ./datasources:/services/datasources
       - ./modules:/apps/etracs25/modules
 
-      - ../_custom/cgpp:/apps/etracs25/modules/cgpp
+      - ../_custom/cgpp:/apps/etracs25/modules/ext/cgpp
       - ./dev_modules/rameses-gov-lgu-services.jar:/services/modules/etracs/rameses-gov-lgu-services.jar
+
+      - ./dev_modules/bpls:/bpls
+      - ./dev_modules/bpls/etracs_bpls.conf:/apps/etracs25/modules.conf.d/etracs_bpls.conf
