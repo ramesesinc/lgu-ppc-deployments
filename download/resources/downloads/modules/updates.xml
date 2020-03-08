@@ -157,6 +157,9 @@ entity.app.context=etracs25
 	<module file="v254-ctc/rameses-gov-etracs-ctc.jar" version="2.3"/>
 
 	<!-- vehicle -->
-	<module file="v254-vehicle/rameses-gov-etracs-vehicle.jar" version="1.0"/> 
+	<module file="v255-vehicle/rameses-gov-etracs-vehicle.jar" version="1.0"/> 
+	<module file="v255-vehicle/rameses-gov-etracs-vehicle-collection.jar" version="1.0"/> 
+	<module file="v255-vehicle/rameses-gov-etracs-vehicle-ppc.jar" version="1.0"/> 
+
 </modules>
 </app>
