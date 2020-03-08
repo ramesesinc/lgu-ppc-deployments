@@ -1,6 +1,6 @@
 <app>
 <env>
-app.title=ETRACS 2.5 build 05 - 20200306_1200 (CITY OF PUERTO PRINCESA) LOCAL BPLS
+app.title=ETRACS 2.5 build 05 - 20200308_1454 (CITY OF PUERTO PRINCESA) LOCAL BPLS
 app.host=172.16.100.12:8070
 app.cluster=osiris3
 app.context=etracs25
@@ -84,6 +84,6 @@ entity.app.context=etracs25
 	<module file="queue/rameses-queueing.jar" version="2.50"/>
 
 	<!-- vehicle -->
-	<module file="v254-vehicle/rameses-gov-etracs-vehicle.jar" version="1.0"/> 
+	<module file="vehicle/rameses-gov-etracs-vehicle.jar" version="2.50"/> 
 </modules>
 </app>
