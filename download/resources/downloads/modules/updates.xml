@@ -113,7 +113,7 @@ vehicle.app.context=enterprise
 	<module file="shared/rameses-client-menu.jar" version="2.50"/>
 	<module file="shared/rameses-client-report.jar" version="2.50"/>
 	<module file="shared/rameses-rules-mgmt.jar" version="2.50"/>
-	<module file="shared/rameses-workflow-mgmt.jar" version="2.50"/>
+	<module file="shared/rameses-workflow-mgmt.jar" version="2.51"/>
 	<module file="shared/rameses-enterprise.jar" version="2.50"/>
 	<module file="shared/rameses-enterprise-admin.jar" version="2.50"/>
 	<module file="shared/rameses-enterprise-entity.jar" version="2.50"/>
@@ -161,7 +161,7 @@ vehicle.app.context=enterprise
 	<module file="v254-ctc/rameses-gov-etracs-ctc.jar" version="2.3"/>
 
 	<!-- vehicle -->
-	<module file="v255-vehicle/rameses-gov-etracs-vehicle.jar" version="1.1"/> 
+	<module file="v255-vehicle/rameses-gov-etracs-vehicle.jar" version="1.2"/> 
 	<module file="v255-vehicle/rameses-gov-etracs-vehicle-collection.jar" version="1.0"/> 
 	<!--
 	<module file="v255-vehicle/rameses-gov-etracs-vehicle-ppc.jar" version="1.0"/> 
