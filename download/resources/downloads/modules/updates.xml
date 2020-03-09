@@ -16,6 +16,10 @@ socketio.host=172.16.100.12:7080
 
 entity.app.host=172.16.100.12:8070
 entity.app.context=etracs25
+
+vehicle.app.host=172.16.100.12:8072
+vehicle.app.context=enterprise
+
 </env>
 <modules> 
 	<!-- modify reports -->

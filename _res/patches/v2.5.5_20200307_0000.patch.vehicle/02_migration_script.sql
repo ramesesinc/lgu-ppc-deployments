@@ -115,19 +115,6 @@ WHERE vf.appid = va.objid
 ;
 
 INSERT INTO  puerto_vehicle.dbo.vehicle_unit (objid,franchiseid)
-SELECT vu.objid,va.controlid 
-FROM etracs_vehicle.dbo.vehicle_application_unit vu
-INNER JOIN etracs_vehicle.dbo.vehicle_application va ON vu.appid = va.objid 
-WHERE va.controlid IN (SELECT objid FROM puerto_vehicle.dbo.vehicle_franchise)
-;
-
-UPDATE nva SET 
-	nva.unitid = va.objid 
-FROM puerto_vehicle.dbo.vehicle_application nva, etracs_vehicle.dbo.vehicle_application_unit va 
-WHERE va.appid = nva.objid
-;
-
-INSERT INTO  puerto_vehicle.dbo.vehicle_unit (objid,franchiseid)
 SELECT vu.objid, vf.controlno  
 FROM etracs_vehicle.dbo.vehicle_application_unit vu
 INNER JOIN etracs_vehicle.dbo.vehicle_application va ON vu.appid = va.objid 
