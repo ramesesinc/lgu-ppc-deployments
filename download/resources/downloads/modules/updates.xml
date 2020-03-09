@@ -101,7 +101,7 @@ vehicle.app.context=enterprise
 	<module file="core/rameses-client-ui.jar" version="2.50"/>
 	<module file="core/rameses-client-ui-bio.jar" version="2.50"/>
 	<module file="core/rameses-client-ui-jfx.jar" version="2.50"/>
-	<module file="core/rameses-client-notification-socketio-18" version="1.0"/>
+	<module file="core/rameses-client-notification-socketio-18.jar" version="1.0"/>
 	<module file="core/rameses-common2.jar" version="2.50"/>
 	<module file="core/rameses-custom-impl.jar" version="2.50"/>
 	<module file="core/rameses-jdbc16.jar" version="2.50"/>
