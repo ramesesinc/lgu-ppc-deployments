@@ -1,0 +1,15 @@
+==========================
+STEPS IN VEHICLE MIGRATION
+==========================
+1. Copy and unzip the file "01_puerto_vehicle_db.zip" 
+
+2. Restore the new vehicle database as "puerto_vehicle"
+
+3. Open Navicat and connect to "puerto_vehicle" database 
+
+4. Open the file "02_migration_script.sql" in your Navicat 
+   to see the migration script commands 
+
+5. Press Ctrl + R to execute all scripts.
+
+   NOTE:  For migration error please relay it to ELMO

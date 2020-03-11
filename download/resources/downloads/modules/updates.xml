@@ -1,6 +1,6 @@
 <app>
 <env>
-app.title=ETRACS 2.5 build 05 20200306_1200 (CITY OF PUERTO PRINCESA)
+app.title=ETRACS 2.5 build 05 20200308_1454 (CITY OF PUERTO PRINCESA)
 app.host=172.16.100.12:8070
 app.cluster=osiris3
 app.context=etracs25
@@ -16,6 +16,10 @@ socketio.host=172.16.100.12:7080
 
 entity.app.host=172.16.100.12:8070
 entity.app.context=etracs25
+
+vehicle.app.host=172.16.100.12:8072
+vehicle.app.context=enterprise
+
 </env>
 <modules> 
 	<!-- modify reports -->
@@ -97,11 +101,11 @@ entity.app.context=etracs25
 	<module file="core/rameses-client-ui.jar" version="2.50"/>
 	<module file="core/rameses-client-ui-bio.jar" version="2.50"/>
 	<module file="core/rameses-client-ui-jfx.jar" version="2.50"/>
-	<module file="core/rameses-client-notification-socketio.jar" version="2.50"/>
+	<module file="core/rameses-client-notification-socketio-18.jar" version="1.0"/>
 	<module file="core/rameses-common2.jar" version="2.50"/>
 	<module file="core/rameses-custom-impl.jar" version="2.50"/>
 	<module file="core/rameses-jdbc16.jar" version="2.50"/>
-	<module file="core/rameses-seti.jar" version="2.50"/>
+	<module file="core/rameses-seti.jar" version="2.51"/>
  
 	<!-- shared -->
 	<module file="shared/client-system.jar" version="2.50"/>
@@ -109,7 +113,7 @@ entity.app.context=etracs25
 	<module file="shared/rameses-client-menu.jar" version="2.50"/>
 	<module file="shared/rameses-client-report.jar" version="2.50"/>
 	<module file="shared/rameses-rules-mgmt.jar" version="2.50"/>
-	<module file="shared/rameses-workflow-mgmt.jar" version="2.50"/>
+	<module file="shared/rameses-workflow-mgmt.jar" version="2.51"/>
 	<module file="shared/rameses-enterprise.jar" version="2.50"/>
 	<module file="shared/rameses-enterprise-admin.jar" version="2.50"/>
 	<module file="shared/rameses-enterprise-entity.jar" version="2.50"/>
@@ -132,7 +136,7 @@ entity.app.context=etracs25
 	<module file="epayment/rameses-gov-epayment-report.jar" version="2.50"/>
 
 	<!-- treasury -->
-	<module file="treasury/rameses-treasury-common.jar" version="2.50"/>
+	<module file="treasury/rameses-treasury-common.jar" version="2.51"/>
 	<module file="treasury/rameses-gov-depositslip.jar" version="2.50"/>
 	<module file="treasury/rameses-gov-treasury.jar" version="2.50"/>
 	<module file="treasury/rameses-gov-treasury-report.jar" version="2.50"/>
@@ -157,6 +161,10 @@ entity.app.context=etracs25
 	<module file="v254-ctc/rameses-gov-etracs-ctc.jar" version="2.3"/>
 
 	<!-- vehicle -->
-	<module file="v254-vehicle/rameses-gov-etracs-vehicle.jar" version="1.0"/> 
+	<module file="v255-vehicle/rameses-gov-etracs-vehicle.jar" version="1.5"/> 
+	<module file="v255-vehicle/rameses-gov-etracs-vehicle-collection.jar" version="1.1"/> 
+	<!--
+	<module file="v255-vehicle/rameses-gov-etracs-vehicle-ppc.jar" version="1.0"/> 
+	-->
 </modules>
 </app>
