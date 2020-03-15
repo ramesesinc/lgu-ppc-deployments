@@ -66,6 +66,9 @@ class SubdivisionService
     @DataContext('subdivision_affectedrpu')
     def em_affectedrpu
 
+    @DataContext('subdivision_task')
+    def em_task
+
     @DataContext('faas_task')
     def em_faas_task
 
@@ -457,16 +460,25 @@ class SubdivisionService
 
     @ProxyMethod
     public void insertFaasSignatories(subdivision) {
+        def _taskid = subdivision._taskid
+        def currTask = em_task.find([objid: _taskid]).first()
+        if (!currTask) return 
+
         em_subdividedland.find([subdivisionid: subdivision.objid]).list().each{
-            em_faas_task.find([refid: it.newfaasid]).delete()
+            faasSvc.insertOnlineFaasSignatory([
+                taskid: _taskid, 
+                faasid: it.newfaasid, 
+                task: currTask
+            ])
         }
 
         em_affectedrpu.find([subdivisionid: subdivision.objid]).list().each{
-            em_faas_task.find([refid: it.newfaasid]).delete()
+            faasSvc.insertOnlineFaasSignatory([
+                taskid: _taskid, 
+                faasid: it.newfaasid, 
+                task: currTask
+            ])
         }
-
-        em.insertSubdividedLandFaasSignatories(subdivision)
-        em.insertAffectedRpuSignatories(subdivision)
     }
 
     @ProxyMethod

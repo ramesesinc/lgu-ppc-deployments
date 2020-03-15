@@ -1326,5 +1326,25 @@ class FAASService
     	info.assignee = null
     	em_faas_list.find([objid: entity.objid]).update(info)
     }
+
+    /* params: 
+    * taskid - the original task.objid 
+    * task - the current task to insert
+    * faasid - the faas.objid to add task to
+    */
+    @ProxyMethod
+    public void insertOnlineFaasSignatory(params) {
+        if (!params.faasid) return
+    	def currTask = params.task
+
+        def newfaas = em_faas.select('utdno').find([objid: params.faasid]).first()
+        if (newfaas) {
+	        currTask.objid = params.taskid + newfaas.utdno
+	        currTask.refid = params.faasid
+	        em_faas_task.create(currTask)
+        }
+    }
+
+
 }
 

@@ -57,6 +57,9 @@ class ConsolidationService
     @DataContext('faas_previous')
     def em_faas_previous 
 
+    @DataContext('consolidation_task')
+    def em_task
+
     @DataContext('faas_task')
     def em_faas_task
 
@@ -587,14 +590,23 @@ class ConsolidationService
 
     @ProxyMethod
     public void insertFaasSignatories(consolidation) {
-        em_faas_task.find([refid: consolidation.newfaasid]).delete()
+        def _taskid = consolidation._taskid
+        def currTask = em_task.find([objid: _taskid]).first()
+        if (!currTask) return 
+
+        faasSvc.insertOnlineFaasSignatory([
+            taskid: _taskid,
+            faasid: consolidation.newfaasid, 
+            task: currTask
+        ])
 
         em_affectedrpu.find([consolidationid: consolidation.objid]).list().each{
-            em_faas_task.find([refid: it.newfaasid]).delete()
+            faasSvc.insertOnlineFaasSignatory([
+                taskid: _taskid,
+                faasid: it.newfaasid, 
+                task: currTask
+            ])
         }
-
-        em.insertConsolidatedFaasSignatories(consolidation)
-        em.insertAffectedRpuSignatories(consolidation)
     }
 
 

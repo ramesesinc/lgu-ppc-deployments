@@ -135,26 +135,18 @@ public class BatchGRService
 
     @ProxyMethod
     public void insertFaasSignatories(entity) {
-        def currTask = em_task.find([objid: entity._taskid]).first()
+        def _taskid = entity._taskid
+        def currTask = em_task.find([objid: _taskid]).first()
         if (!currTask) return 
 
         em_batchgr_item.find([parent_objid: entity.objid]).list().each {
-            if (it.newfaasid) {
-                def newfaas = em_faas.select('utdno').find([objid: it.newfaasid]).first()
-                currTask.objid = entity._taskid + newfaas.utdno
-                currTask.refid = it.newfaasid
-                em_faas_task.create(currTask)
-            }
+            faasSvc.insertOnlineFaasSignatory([
+                taskid: _taskid, 
+                faasid: it.newfaasid, 
+                task: currTask
+            ])
         }
     }
-    
-    // @ProxyMethod
-    // public void insertFaasSignatories(entity) {
-    //     em_batchgr_item.find([parent_objid: entity.objid]).list().each{
-    //         em_faas_task.find([refid: it.newfaasid]).delete()
-    //     }
-    //     em_batchgr.insertRevisedFaasSignatories(entity)
-    // }
 
     @ProxyMethod
     public void updateSignatories(task){
