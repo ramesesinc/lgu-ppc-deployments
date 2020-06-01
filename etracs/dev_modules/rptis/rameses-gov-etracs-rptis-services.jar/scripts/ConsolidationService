@@ -312,6 +312,7 @@ class ConsolidationService
                 pf.totalareasqm = it.rpu.totalareasqm 
                 pf.totalareaha = it.rpu.totalareaha 
                 pf.effectivityyear = it.effectivityyear 
+                pf.taxable = it.taxable
                 pfs << pf 
             }
             faas.prevtdno = clands.faas.tdno.join(', ')
@@ -560,6 +561,7 @@ class ConsolidationService
         pf.totalareasqm = faas.rpu.totalareasqm 
         pf.totalareaha = faas.rpu.totalareaha 
         pf.effectivityyear = faas.effectivityyear      
+        pf.taxable = faas.rpu.taxable
 
         faas.prevtdno = faas.tdno
         faas.objid = 'F' + arpu.objid 

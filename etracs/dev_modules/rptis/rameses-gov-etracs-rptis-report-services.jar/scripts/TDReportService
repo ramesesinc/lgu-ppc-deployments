@@ -160,6 +160,7 @@ class TDReportService
 		faas.prevareasqm = getPreviousInfo(list, 'prevareasqm', '#,##0.00')
 		faas.prevareaha = getPreviousInfo(list, 'prevareaha', '#,##0.000000')
 		faas.preveffectivity = getPreviousInfo(list, 'preveffectivity')
+		faas.prevtaxability = getPreviousInfo(list, 'prevtaxability')
 	}
 
 	void buildAdjustmentFactor(td){
@@ -377,7 +378,11 @@ class TDReportService
 				//cancel faas transaction
 				def reason = adb.findCancelFaasReason(td)
 				if (reason){
-					notes  = 'Cancelled due to ' + reason.reason + '.\n'
+					notes = '';
+					if (reason.cancelledbytdnos) {
+						notes  +=  'Cancelled By TD/ARP No. ' + td.cancelledbytdnos + '.\n' 
+					}
+					notes  += 'Cancelled due to ' + reason.reason + '.\n'
 					notes += 'Date Cancelled: ' + dtSvc.format('MMMMM dd, yyyy' ,reason.txndate) + '.  ' 
 				}
 				else{
