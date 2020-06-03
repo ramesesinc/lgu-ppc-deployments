@@ -56,7 +56,7 @@ entity.app.context=etracs25
 	
 	<!--2019 1st QTR -->
 	<module file="custom/LT-NOD-2019-1.jar" version="1.3"/>
-	<module file="custom/rpt-td-report-2.jar" version="1.52"/>
+	<module file="custom/rpt-td-report-2.jar" version="1.53"/>
 
 	<!--2019 2nd QTR -->
 	<module file="custom/LT-SOA.jar" version="1.3"/>

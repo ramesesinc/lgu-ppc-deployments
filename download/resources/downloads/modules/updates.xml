@@ -60,7 +60,7 @@ vehicle.app.context=enterprise
 	<!--module file="custom/td_w_condotittle.jar" version="1.6"/-->
 	
 	<!--2019 1st QTR -->
-	<module file="custom/rpt-td-report-2.jar" version="1.52"/>
+	<module file="custom/rpt-td-report-2.jar" version="1.53"/>
 
 	<!--2019 2nd QTR -->
 	<module file="custom/LT-SOA.jar" version="1.3"/>
