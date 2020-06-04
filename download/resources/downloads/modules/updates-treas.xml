@@ -1,6 +1,6 @@
 <app>
 <env>
-app.title=ETRACS 2.5 build 05 - 20200303_1834 (CITY OF PUERTO PRINCESA) LOCAL TREASURY
+app.title=ETRACS 2.5 build 05 - 20200308_1454 (CITY OF PUERTO PRINCESA) LOCAL TREASURY
 app.host=172.16.100.12:8070
 app.cluster=osiris3
 app.context=etracs25
@@ -85,8 +85,8 @@ entity.app.context=etracs25
 	<!-- treasury -->
 	<module file="treasury/rameses-treasury-common.jar" version="2.50"/>
 	<module file="treasury/rameses-gov-depositslip.jar" version="2.50"/>
-	<module file="treasury/rameses-gov-treasury.jar" version="2.50"/>
-	<module file="treasury/rameses-gov-treasury-report.jar" version="2.50"/>
+	<module file="treasury/rameses-gov-treasury.jar" version="2.51"/>
+	<module file="treasury/rameses-gov-treasury-report.jar" version="2.51"/>
 	<module file="treasury/rameses-gov-treasury-tool.jar" version="2.50"/>
 
 	<!-- queue -->
@@ -96,6 +96,6 @@ entity.app.context=etracs25
 	<module file="v254-ctc/rameses-gov-etracs-ctc.jar" version="2.3"/>
 
 	<!-- vehicle -->
-	<module file="v254-vehicle/rameses-gov-etracs-vehicle.jar" version="1.0"/> 
+	<module file="vehicle/rameses-gov-etracs-vehicle.jar" version="2.50"/> 
 </modules>
 </app>

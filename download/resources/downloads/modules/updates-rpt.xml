@@ -56,7 +56,7 @@ entity.app.context=etracs25
 	
 	<!--2019 1st QTR -->
 	<module file="custom/LT-NOD-2019-1.jar" version="1.3"/>
-	<module file="custom/rpt-td-report-2.jar" version="1.52"/>
+	<module file="custom/rpt-td-report-2.jar" version="1.54"/>
 
 	<!--2019 2nd QTR -->
 	<module file="custom/LT-SOA.jar" version="1.3"/>
@@ -117,15 +117,15 @@ entity.app.context=etracs25
 	<!-- treasury -->
 	<module file="treasury/rameses-treasury-common.jar" version="2.50"/>
 	<module file="treasury/rameses-gov-depositslip.jar" version="2.50"/>
-	<module file="treasury/rameses-gov-treasury.jar" version="2.50"/>
-	<module file="treasury/rameses-gov-treasury-report.jar" version="2.50"/>
+	<module file="treasury/rameses-gov-treasury.jar" version="2.51"/>
+	<module file="treasury/rameses-gov-treasury-report.jar" version="2.51"/>
 	<module file="treasury/rameses-gov-treasury-tool.jar" version="2.50"/>
 
 	<!-- rptis -->
 	<module file="rptis/rameses-gov-etracs-rptis-landtax.jar" version="2.50"/>
 	<module file="rptis/rameses-gov-etracs-rptis-landtax-report.jar" version="2.50"/>
-	<module file="rptis/rameses-gov-etracs-rptis.jar" version="2.50"/>
-	<module file="rptis/rameses-gov-etracs-rptis-report.jar" version="2.50"/>
+	<module file="rptis/rameses-gov-etracs-rptis.jar" version="2.58"/>
+	<module file="rptis/rameses-gov-etracs-rptis-report.jar" version="2.51"/>
 	<module file="rptis/rameses-gov-etracs-rptis-city.jar" version="2.50"/>
 
 	<!-- queue -->

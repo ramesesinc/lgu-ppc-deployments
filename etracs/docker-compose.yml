@@ -22,7 +22,7 @@ services:
 
 
   etracs25-server:
-    image: ramesesinc/etracs25-server-city:255.02.006
+    image: ramesesinc/etracs25-server-city:255.02.007
     container_name: etracs25-server
     restart: always
     logging:
@@ -44,7 +44,12 @@ services:
       - ./modules:/apps/etracs25/modules
 
       - ../_custom/cgpp:/apps/etracs25/modules/ext/cgpp
-      - ./dev_modules/rameses-gov-lgu-services.jar:/services/modules/etracs/rameses-gov-lgu-services.jar
+
+      - ./dev_modules/gov:/gov
+      - ./dev_modules/gov/etracs__gov.conf:/apps/etracs25/modules.conf.d/etracs__gov.conf
 
       - ./dev_modules/bpls:/bpls
       - ./dev_modules/bpls/etracs_bpls.conf:/apps/etracs25/modules.conf.d/etracs_bpls.conf
+
+      - ./dev_modules/rptis:/rptis
+      - ./dev_modules/rptis/etracs_rptis.conf:/apps/etracs25/modules.conf.d/etracs_rptis.conf

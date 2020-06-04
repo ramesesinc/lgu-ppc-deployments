@@ -192,5 +192,5 @@ from abstractrptcredit
 where ledgerid = $P{rptledgerid}
   and    (toYear = $P{year} OR toYear > $P{year} )
   AND (toYear > $P{year} OR (toYear = $P{year} AND toQtr <= $P{qtr}))  
-group by refno, ordate, fromYear, toYear   
+group by receiptNo, receiptDate, refno, ordate, fromYear, toYear   
 
