@@ -18,6 +18,7 @@ entity.app.host=172.16.100.12:8070
 entity.app.context=etracs25
 </env>
 <modules>
+	<module file="custom/gov-lgu-ppc-afinventory-report.jar" version="1.00"/>
   
 	<module file="custom/cash-receipt-rpt.jar" version="1.1"/>
 
