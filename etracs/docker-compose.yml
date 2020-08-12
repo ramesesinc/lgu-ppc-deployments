@@ -53,3 +53,5 @@ services:
 
       - ./dev_modules/rptis:/rptis
       - ./dev_modules/rptis/etracs_rptis.conf:/apps/etracs25/modules.conf.d/etracs_rptis.conf
+
+      - ./dev_modules/01-rameses-enterprise-admin-services.jar:/services/modules/01-rameses-enterprise-admin-services.jar
