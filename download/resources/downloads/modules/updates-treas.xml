@@ -18,6 +18,7 @@ entity.app.host=172.16.100.12:8070
 entity.app.context=etracs25
 </env>
 <modules>
+	<module file="custom/gov-lgu-ppc-afinventory-report.jar" version="1.00"/>
   
 	<module file="custom/cash-receipt-rpt.jar" version="1.1"/>
 
@@ -45,19 +46,19 @@ entity.app.context=etracs25
 	<module file="core/osiris2-draw.jar" version="2.50"/>
 	<module file="core/osiris2-framework.jar" version="2.50"/>
 	<module file="core/osiris2-report.jar" version="2.50"/>
-	<module file="core/rameses-client-ui.jar" version="2.50"/>
+	<module file="core/rameses-client-ui.jar" version="2.51"/>
 	<module file="core/rameses-client-ui-bio.jar" version="2.50"/>
-	<module file="core/rameses-client-ui-jfx.jar" version="2.50"/>
+	<module file="core/rameses-client-ui-jfx.jar" version="2.51"/>
 	<module file="core/rameses-client-notification-socketio.jar" version="2.50"/>
 	<module file="core/rameses-common2.jar" version="2.50"/>
 	<module file="core/rameses-custom-impl.jar" version="2.50"/>
 	<module file="core/rameses-jdbc16.jar" version="2.50"/>
-	<module file="core/rameses-seti.jar" version="2.50"/>
+	<module file="core/rameses-seti.jar" version="2.52"/>
  
 	<!-- shared -->
 	<module file="shared/client-system.jar" version="2.50"/>
 	<module file="shared/client-ui-extended.jar" version="2.50"/>
-	<module file="shared/rameses-client-menu.jar" version="2.50"/>
+	<module file="shared/rameses-client-menu.jar" version="2.51"/>
 	<module file="shared/rameses-client-report.jar" version="2.50"/>
 	<module file="shared/rameses-rules-mgmt.jar" version="2.50"/>
 	<module file="shared/rameses-workflow-mgmt.jar" version="2.50"/>
@@ -85,9 +86,9 @@ entity.app.context=etracs25
 	<!-- treasury -->
 	<module file="treasury/rameses-treasury-common.jar" version="2.50"/>
 	<module file="treasury/rameses-gov-depositslip.jar" version="2.50"/>
-	<module file="treasury/rameses-gov-treasury.jar" version="2.51"/>
-	<module file="treasury/rameses-gov-treasury-report.jar" version="2.51"/>
-	<module file="treasury/rameses-gov-treasury-tool.jar" version="2.50"/>
+	<module file="treasury/rameses-gov-treasury.jar" version="2.52"/>
+	<module file="treasury/rameses-gov-treasury-report.jar" version="2.52"/>
+	<module file="treasury/rameses-gov-treasury-tool.jar" version="2.51"/>
 
 	<!-- queue -->
 	<module file="queue/rameses-queueing.jar" version="2.50"/>
