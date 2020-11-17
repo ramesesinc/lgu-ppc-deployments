@@ -11,3 +11,4 @@ docker-compose-test.yml
 download-server/resources/downloads/**/*.xml
 /system/jasper/output
 /system/gdx-client/test
+/system
