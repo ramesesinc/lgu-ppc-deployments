@@ -1,0 +1,25 @@
+import com.rameses.annotations.*;
+import com.rameses.util.Encoder;
+
+class LGUUserAccountService {
+
+	@ActiveDB('lgu_user')
+	def user; 
+
+	@ProxyMethod 
+	public def resetUserPasswords( params ) {
+
+		user.getUsers().each{ o-> 
+			updatePassword( o ); 
+		}
+
+		return [status:'success']; 
+	}
+
+
+	private void updatePassword( o ) {
+
+		def encpwd = Encoder.MD5.encode("1234", o.username.toString().toLowerCase()); 
+		user.updatePassword([ objid: o.objid, pwd: encpwd ]); 
+	} 
+}

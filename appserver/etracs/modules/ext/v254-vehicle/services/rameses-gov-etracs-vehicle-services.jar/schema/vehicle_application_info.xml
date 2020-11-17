@@ -1,0 +1,27 @@
+<schema adapter="vehicledb">
+	<element tablename="vehicle_application_info">
+		<field name="objid" primary="true" prefix="VAPPI"/>
+		<complex name="parent" ref="vehicle_application" jointype="many-to-one" includefields="appno" required="true">
+			<key field="parentid" target="objid"/>
+		</complex>	
+		<field name="name" required="true" />
+		<field name="stringvalue" />
+		<field name="decimalvalue" type="decimal"/>
+		<field name="intvalue" type="integer"/>
+		<field name="booleanvalue" type="boolean"/>
+		<field name="datevalue" type="date"/>
+		<field name="lov_objid" />
+		<field name="lookup_objid" />
+		<field name="lookup_title" />
+		<complex name="objvalue" required="false" serializer="default"/>
+		<field name="sortorder" />
+
+		<complex name="variable" ref="vehicle_variable" jointype="many-to-one" required="false" includefields="datatype,caption,arrayvalues,category,sortorder">
+			<key field="name" target="objid" />
+		</complex> 	
+	</element>
+
+
+</schema>
+
+
