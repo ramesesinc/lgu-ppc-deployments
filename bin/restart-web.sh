@@ -1,9 +1,8 @@
 #!/bin/sh
 RUN_DIR=`pwd`
-cd ../appserver/vehicle
+cd ../system/etracs-web
 docker-compose down
 docker system prune -f
-sleep 1
 docker-compose up -d
-docker-compose logs -f vehicle-server
+docker-compose logs -f etracs-web
 cd $RUN_DIR
