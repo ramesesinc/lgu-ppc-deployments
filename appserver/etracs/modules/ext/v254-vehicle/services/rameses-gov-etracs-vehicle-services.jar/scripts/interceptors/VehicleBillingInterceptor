@@ -117,7 +117,7 @@ class VehicleBillingInterceptor {
 		units.each {
 			facts << new VehicleUnit( it );
 		};
-		def vp = new VariableInfoProvider(
+		def vp = new DefaultVariableInfoProvider(
 			schemaName:"vehicle_variable"
 		);
 		factBuilder.variableInfoProvider = vp;
