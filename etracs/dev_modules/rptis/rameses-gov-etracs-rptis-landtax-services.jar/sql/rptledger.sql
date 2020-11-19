@@ -70,5 +70,5 @@ select
   rp.*,
   (select max(partialled) from rptpayment_item where parentid = rp.objid) as partialled
 from rptpayment rp 
-where refid = $P{objid}
+where refid = $P{objid} and rp.voided = 0
 order by rp.fromyear desc, rp.fromqtr desc, rp.receiptno desc
