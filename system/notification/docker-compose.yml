@@ -21,7 +21,7 @@ services:
 
   notification-ws60:
     container_name: notification-ws60
-    image: ramesesinc/notification-ws:255.03
+    image: ramesesinc/notification-ws:2.5.01
     restart: always
     logging:
       driver: "json-file"
@@ -37,7 +37,7 @@ services:
 
   notification-ws61:
     container_name: notification-ws61
-    image: ramesesinc/notification-ws:255.03
+    image: ramesesinc/notification-ws:2.5.01
     restart: always
     logging:
       driver: "json-file"
