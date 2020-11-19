@@ -15,7 +15,7 @@ class WorkflowTaskListService  {
     @DataContext(dynamic=true)
     def db;
 
-    @Service(value='UserRoleService', connection="admin-server")
+    @Service(value='UserRoleService', connection="admin")
     def roleSvc;
 
     @Env 

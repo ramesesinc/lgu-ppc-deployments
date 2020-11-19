@@ -1,0 +1,10 @@
+app:
+
+   env:
+      "vehicle.app.host" : "${app_server_ip}:8072"
+      "vehicle.app.context" : "enterprise"
+
+   modules:
+      # vehicle
+      - { order: 270, version: 1.05, file: "modules/v255-vehicle/rameses-gov-etracs-vehicle.jar" }
+      - { order: 271, version: 1.01, file: "modules/v255-vehicle/rameses-gov-etracs-vehicle-collection.jar" }

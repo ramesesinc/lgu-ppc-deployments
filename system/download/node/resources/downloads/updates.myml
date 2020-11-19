@@ -66,10 +66,7 @@ app:
       - { order: 250, version: 2.55, file: "modules/bpls/rameses-gov-etracs-bpls.jar" }
       - { order: 251, version: 2.55, file: "modules/bpls/rameses-gov-etracs-bpls-ceo.jar" }
       - { order: 252, version: 2.55, file: "modules/bpls/rameses-gov-etracs-bpls-reports.jar" }
-      # bpls
+      # queue
       - { order: 260, version: 2.55, file: "modules/queue/rameses-queueing.jar" }
       # ctc
       - { order: 270, version: 2.03, file: "modules/v254-ctc/rameses-gov-etracs-ctc.jar" }
-      # vehicle
-      - { order: 270, version: 1.05, file: "modules/v255-vehicle/rameses-gov-etracs-vehicle.jar" }
-      - { order: 271, version: 1.01, file: "modules/v255-vehicle/rameses-gov-etracs-vehicle-collection.jar" }
