@@ -1,7 +1,7 @@
 app:
 
    env:
-      "vehicle.app.host" : "${app_server_ip}:8072"
+      "vehicle.app.host" : "${app_server_ip2}:8072"
       "vehicle.app.context" : "enterprise"
 
    modules:
