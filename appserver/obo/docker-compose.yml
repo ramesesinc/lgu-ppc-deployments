@@ -16,9 +16,9 @@ services:
     ports:
       - "8073:8070"
     volumes:
-      - ../../_res/connections:/apps/server/services/apps/enterprise/connections/ext
-      - ../../_custom/datasources/obods:/apps/server/services/datasources/mainds
-      - ./templates:/apps/server/templates      
-      - ../../_custom/jasper/obo:/apps/server/templates/custom
+      - ../../_res/connections:/enterprise/connections/ext
+      - ../../_custom/datasources/obods:/services/datasources/mainds
       - ../../_custom/output:/apps/server/output
       - ./server-modules:/enterprise/modules
+      - ./templates:/apps/server/templates
+      - ../../_custom/jasper/obo:/apps/server/templates/custom
