@@ -4,7 +4,7 @@ services:
   
   notification-socketio:
     container_name: notification-socketio
-    image: "ramesesinc/notification-server:1.0"
+    image: ramesesinc/notification-server:1.0
     restart: always
     logging:
       driver: "json-file"
