@@ -18,5 +18,5 @@ docker pull ramesesinc/etracs-web:2.5.01.01
 docker pull ramesesinc/queue-server:255.02.002
 docker pull ramesesinc/mail-server:latest
 docker pull ramesesinc/local-epayment-server:2.5.01.02.02
-docker pull ramesesinc/etracs-server-city:2.5.02.06.01
+docker pull ramesesinc/etracs-server-city:2.5.02.07.01
 docker pull ramesesinc/local-vehicle-server:255.01.003.002
