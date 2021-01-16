@@ -20,3 +20,4 @@ docker pull ramesesinc/mail-server:latest
 docker pull ramesesinc/local-epayment-server:2.5.01.02.02
 docker pull ramesesinc/etracs-server-city:2.5.02.07.01
 docker pull ramesesinc/local-vehicle-server:255.01.003.002
+docker pull ramesesinc/enterprise-common-server:255.04.001
