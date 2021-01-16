@@ -223,6 +223,11 @@ class OnlineBusinessRenewalService {
 
 	@ProxyMethod
   	public def create( param ) { 
+  		println '\n** create' 
+  		param.each{
+  			println '> '+ it; 
+  		}
+  		
   		if ( !param.bin ) throw new Exception('bin parameter is required'); 
   		if ( !param.businessid ) throw new Exception('businessid parameter is required'); 
   		if ( !param.tokenid ) throw new Exception('tokenid parameter is required'); 
