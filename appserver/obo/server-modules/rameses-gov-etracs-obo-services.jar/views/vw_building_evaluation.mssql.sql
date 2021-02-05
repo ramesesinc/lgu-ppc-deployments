@@ -9,17 +9,15 @@ SELECT
    app.task_state AS app_task_state, 
    t.state AS task_state,
    t.dtcreated AS task_dtcreated,
-   (  SELECT bst.dtcreated  
+   (  SELECT TOP 1 bst.dtcreated  
       FROM building_evaluation_task bst 
       WHERE bst.refid = a.objid AND bst.state = 'start'
       ORDER BY bst.dtcreated ASC 
-      LIMIT 1
    ) AS task_startdate,
-   (  SELECT bst.dtcreated  
+   (  SELECT TOP 1 bst.dtcreated  
       FROM building_evaluation_task bst 
       WHERE bst.refid = a.objid AND bst.state = 'end'
       ORDER BY bst.dtcreated DESC 
-      LIMIT 1
    ) AS task_enddate,
    t.assignee_objid AS task_assignee_objid,
    t.assignee_name AS task_assignee_name,
