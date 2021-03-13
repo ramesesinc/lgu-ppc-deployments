@@ -8,3 +8,6 @@ Thumbs.db
 updates-dev.xml
 docker-compose-test.yml
 *.mp4
+download-server/resources/downloads/**/*.xml
+/system/jasper/output
+/system/gdx-client/test

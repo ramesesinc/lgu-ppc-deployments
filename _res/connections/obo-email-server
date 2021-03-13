@@ -1,0 +1,4 @@
+provider=email
+mail.smtp.port=2526
+mail.smtp.host=${app_server_ip}
+mail.from=puertoprincesacity.obo@gmail.com
