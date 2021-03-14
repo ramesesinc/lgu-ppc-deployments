@@ -7,6 +7,8 @@ docker system prune -f
 
 cd $BASE_DIR/email/mail-primary && docker-compose up -d
 
+cd $BASE_DIR/email/mail-obo && docker-compose up -d
+
 
 cd $BASE_DIR/system/notification && docker-compose up -d
 
