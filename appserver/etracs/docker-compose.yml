@@ -29,3 +29,4 @@ services:
       - ../../_custom/module-server:/apps/etracs25/modules/ext/zzz-lgu-custom-module
 
       - ./rameses-gov-etracs-bpls-online-services.jar:/services/modules/bpls/rameses-gov-etracs-bpls-online-services.jar
+      - ./dev-modules/rameses-gov-etracs-tools.jar:/services/modules/etracs/rameses-gov-etracs-tools.jar
