@@ -208,9 +208,202 @@ go
 
 
 
--- 
--- VIEWS 
--- 
+insert into sys_role ( name, title, system )
+select name, title, system 
+from ( 
+   SELECT 'ADMIN' as name, 'ADMIN' as title, 1 as system
+   union 
+   SELECT 'APPROVER' as name, 'APPROVER' as title, 1 as system
+   union 
+   SELECT 'ARCHITECTURAL_EVALUATOR' as name, 'ARCHITECTURAL EVALUATOR' as title, 1 as system
+   union 
+   SELECT 'ASSESSOR' as name, 'ASSESSOR' as title, 1 as system
+   union 
+   SELECT 'BFP_APPROVER' as name, 'BFP APPROVER' as title, 1 as system
+   union 
+   SELECT 'BFP_EVALUATOR' as name, 'BFP EVALUATOR' as title, 1 as system
+   union 
+   SELECT 'BFP_INSPECTOR' as name, 'BFP INSPECTOR' as title, 1 as system
+   union 
+   SELECT 'BFP_RELEASER' as name, 'BFP RELEASER' as title, 1 as system
+   union 
+   SELECT 'BFP_REVIEWER' as name, 'BFP REVIEWER' as title, 1 as system
+   union 
+   SELECT 'BILLING' as name, 'OBO BILLING' as title, 1 as system
+   union 
+   SELECT 'CIVIL_STRUCTURAL_EVALUATOR' as name, 'CIVIL_STRUCTURAL_EVALUATOR' as title, 1 as system
+   union 
+   SELECT 'COORDINATOR' as name, 'OBO COORDINATOR' as title, 1 as system
+   union 
+   SELECT 'ELECTRICAL_EVALUATOR' as name, 'ELECTRICAL EVALUATOR' as title, 1 as system
+   union 
+   SELECT 'ELECTRONIC_EVALUATOR' as name, 'ELECTRONIC_EVALUATOR' as title, 1 as system
+   union 
+   SELECT 'LAND_USE_EVALUATOR' as name, 'LAND USE EVALUATOR' as title, 1 as system
+   union 
+   SELECT 'LINE_AND_GRADE_EVALUATOR' as name, 'LINE_AND_GRADE_EVALUATOR' as title, 1 as system
+   union 
+   SELECT 'MASTER' as name, 'MASTER' as title, 1 as system
+   union 
+   SELECT 'MECHANICAL_EVALUATOR' as name, 'MECHANICAL EVALUATOR' as title, 1 as system
+   union 
+   SELECT 'PLUMBING_EVALUATOR' as name, 'PLUMBING EVALUATOR' as title, 1 as system
+   union 
+   SELECT 'RECEIVER' as name, 'RECEIVER' as title, 1 as system
+   union 
+   SELECT 'RELEASER' as name, 'OBO RELEASER' as title, 1 as system
+   union 
+   SELECT 'REQUIREMENT_REVIEWER' as name, 'OBO REQUIREMENT_REVIEWER' as title, 1 as system
+   union 
+   SELECT 'REVIEWER' as name, 'OBO REVIEWER' as title, 1 as system
+   union 
+   SELECT 'RPT_APPROVER' as name, 'OBO RPT_APPROVER' as title, 1 as system
+   union 
+   SELECT 'RPT_INSPECTOR' as name, 'OBO RPT_INSPECTOR' as title, 1 as system
+   union 
+   SELECT 'RPT_REVIEWER' as name, 'OBO RPT_REVIEWER' as title, 1 as system
+   union 
+   SELECT 'RULE_AUTHOR' as name, 'OBO RULE_AUTHOR' as title, 1 as system
+   union 
+   SELECT 'SANITARY_EVALUATOR' as name, 'SANITARY EVALUATOR' as title, 1 as system
+   union 
+   SELECT 'SECTION_APPROVER' as name, 'OBO SECTION_APPROVER' as title, 1 as system
+   union 
+   SELECT 'SECTION_EVALUATOR' as name, 'SECTION EVALUATOR' as title, 1 as system
+   union 
+   SELECT 'SECTION_INSPECTOR' as name, 'SECTION INSPECTOR' as title, 1 as system
+   union 
+   SELECT 'SECTION_ISSUER' as name, 'OBO SECTION_ISSUER' as title, 1 as system
+   union 
+   SELECT 'SECTION_RELEASER' as name, 'OBO SECTION_RELEASER' as title, 1 as system
+   union 
+   SELECT 'SECTION_REVIEWER' as name, 'OBO SECTION_REVIEWER' as title, 1 as system
+   union 
+   SELECT 'SHARED' as name, 'OBO SHARED' as title, 1 as system
+   union 
+   SELECT 'SITE_EVALUATOR' as name, 'OBO SITE_EVALUATOR' as title, 1 as system
+   union 
+   SELECT 'SITE_INSPECTOR' as name, 'SITE INSPECTOR' as title, 1 as system
+   union 
+   SELECT 'SITE_REVIEWER' as name, 'OBO SITE_REVIEWER' as title, 1 as system
+   union 
+   SELECT 'SYSTEM' as name, 'OBO SYSTEM' as title, 1 as system
+   union 
+   SELECT 'WF_EDITOR' as name, 'WORKFLOW EDITOR' as title, 0 as system
+   union 
+   SELECT 'ZONING_APPROVER' as name, 'ZONING APPROVER' as title, 1 as system
+   union 
+   SELECT 'ZONING_EVALUATOR' as name, 'ZONING EVALUATOR' as title, 1 as system
+   union 
+   SELECT 'ZONING_RELEASER' as name, 'OBO ZONING_RELEASER' as title, 1 as system
+   union 
+   SELECT 'ZONING_REVIEWER' as name, 'ZONING REVIEWER' as title, 1 as system
+)tmp1 
+where tmp1.name not in (select name from sys_role) 
+; 
+
+
+
+insert into sys_role ( name, title, system ) 
+select name, title, system  
+from ( 
+ SELECT 'ADMIN' as name, 'ADMIN' as title, 1 as system
+ union 
+ SELECT 'APPROVER' as name, 'APPROVER' as title, 1 as system
+ union 
+ SELECT 'ARCHITECTURAL_EVALUATOR' as name, 'ARCHITECTURAL EVALUATOR' as title, 1 as system
+ union 
+ SELECT 'ASSESSOR' as name, 'ASSESSOR' as title, 1 as system
+ union 
+ SELECT 'BFP_APPROVER' as name, 'BFP APPROVER' as title, 1 as system
+ union 
+ SELECT 'BFP_EVALUATOR' as name, 'BFP EVALUATOR' as title, 1 as system
+ union 
+ SELECT 'BFP_INSPECTOR' as name, 'BFP INSPECTOR' as title, 1 as system
+ union 
+ SELECT 'BFP_RELEASER' as name, 'BFP RELEASER' as title, 1 as system
+ union 
+ SELECT 'BFP_REVIEWER' as name, 'BFP REVIEWER' as title, 1 as system
+ union 
+ SELECT 'BILLING' as name, 'OBO BILLING' as title, 1 as system
+ union 
+ SELECT 'CIVIL_STRUCTURAL_EVALUATOR' as name, 'CIVIL_STRUCTURAL_EVALUATOR' as title, 1 as system
+ union 
+ SELECT 'COORDINATOR' as name, 'OBO COORDINATOR' as title, 1 as system
+ union 
+ SELECT 'EDITOR' as name, 'OBO EDITOR' as title, 0 as system
+ union 
+ SELECT 'ELECTRICAL_EVALUATOR' as name, 'ELECTRICAL EVALUATOR' as title, 1 as system
+ union 
+ SELECT 'ELECTRONIC_EVALUATOR' as name, 'ELECTRONIC_EVALUATOR' as title, 1 as system
+ union 
+ SELECT 'LAND_USE_EVALUATOR' as name, 'LAND USE EVALUATOR' as title, 1 as system
+ union 
+ SELECT 'LINE_AND_GRADE_EVALUATOR' as name, 'LINE_AND_GRADE_EVALUATOR' as title, 1 as system
+ union 
+ SELECT 'MASTER' as name, 'MASTER' as title, 1 as system
+ union 
+ SELECT 'MECHANICAL_EVALUATOR' as name, 'MECHANICAL EVALUATOR' as title, 1 as system
+ union 
+ SELECT 'PLUMBING_EVALUATOR' as name, 'PLUMBING EVALUATOR' as title, 1 as system
+ union 
+ SELECT 'RECEIVER' as name, 'RECEIVER' as title, 1 as system
+ union 
+ SELECT 'RELEASER' as name, 'OBO RELEASER' as title, 1 as system
+ union 
+ SELECT 'REQUIREMENT_REVIEWER' as name, 'OBO REQUIREMENT_REVIEWER' as title, 1 as system
+ union 
+ SELECT 'REVIEWER' as name, 'OBO REVIEWER' as title, 1 as system
+ union 
+ SELECT 'RPT_APPROVER' as name, 'OBO RPT_APPROVER' as title, 1 as system
+ union 
+ SELECT 'RPT_INSPECTOR' as name, 'OBO RPT_INSPECTOR' as title, 1 as system
+ union 
+ SELECT 'RPT_REVIEWER' as name, 'OBO RPT_REVIEWER' as title, 1 as system
+ union 
+ SELECT 'RULE_AUTHOR' as name, 'OBO RULE_AUTHOR' as title, 1 as system
+ union 
+ SELECT 'SANITARY_EVALUATOR' as name, 'SANITARY EVALUATOR' as title, 1 as system
+ union 
+ SELECT 'SECTION_APPROVER' as name, 'OBO SECTION_APPROVER' as title, 1 as system
+ union 
+ SELECT 'SECTION_EVALUATOR' as name, 'SECTION EVALUATOR' as title, 1 as system
+ union 
+ SELECT 'SECTION_INSPECTOR' as name, 'SECTION INSPECTOR' as title, 1 as system
+ union 
+ SELECT 'SECTION_ISSUER' as name, 'OBO SECTION_ISSUER' as title, 1 as system
+ union 
+ SELECT 'SECTION_RELEASER' as name, 'OBO SECTION_RELEASER' as title, 1 as system
+ union 
+ SELECT 'SECTION_REVIEWER' as name, 'OBO SECTION_REVIEWER' as title, 1 as system
+ union 
+ SELECT 'SHARED' as name, 'OBO SHARED' as title, 1 as system
+ union 
+ SELECT 'SITE_EVALUATOR' as name, 'OBO SITE_EVALUATOR' as title, 1 as system
+ union 
+ SELECT 'SITE_INSPECTOR' as name, 'SITE INSPECTOR' as title, 1 as system
+ union 
+ SELECT 'SITE_REVIEWER' as name, 'OBO SITE_REVIEWER' as title, 1 as system
+ union 
+ SELECT 'SUPERVISOR' as name, 'OBO SUPERVISOR' as title, 0 as system
+ union 
+ SELECT 'SYSTEM' as name, 'OBO SYSTEM' as title, 1 as system
+ union 
+ SELECT 'WF_EDITOR' as name, 'WORKFLOW EDITOR' as title, 0 as system
+ union 
+ SELECT 'ZONING_APPROVER' as name, 'ZONING APPROVER' as title, 1 as system
+ union 
+ SELECT 'ZONING_EVALUATOR' as name, 'ZONING EVALUATOR' as title, 1 as system
+ union 
+ SELECT 'ZONING_RELEASER' as name, 'OBO ZONING_RELEASER' as title, 1 as system
+ union 
+ SELECT 'ZONING_REVIEWER' as name, 'ZONING REVIEWER' as title, 1 as system
+)tmp1 
+where tmp1.name not in (select name from sys_role)
+;
+
+
+
 
 --
 -- VIEWS
