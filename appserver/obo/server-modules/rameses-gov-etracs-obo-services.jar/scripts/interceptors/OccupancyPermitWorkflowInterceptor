@@ -132,12 +132,6 @@ class OccupancyPermitWorkflowInterceptor {
 		def appid = p.refid;
 		def dt = dateSvc.getServerDate();
 
-		//auto create 
-		def oc = doctypeEm.find( [objid: "occupancy_permit"] ).first();
-		if(oc.issuetype == 3 ) {
-			controlSvc.create( [objid: appid, doctypeid: "occupancy_permit", _schemaname: "occupancy_permit" ] );
-		}
-
 		//auto issue documents that are issuetype = 3
 		def autoIssueDocs = vwSubdocEm.find( [appid: appid]).where("controlid IS NULL AND doctype.issuetype = 3").list();
 		if( autoIssueDocs ) {

@@ -20,7 +20,6 @@ class BuildingApplicationService {
 	@DataContext("vw_building_evaluation")
 	def vwEvalEm;
 
-
 	@Env
 	def env;
 

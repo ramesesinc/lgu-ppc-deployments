@@ -77,6 +77,18 @@ class OccupancyPermitPersistenceInterceptor {
 		return costSvc.calc( param );
 	}
 
+	private def getTxnType( def app ) {
+    	def occupancytype = app.occupancytype;
+		def txntype = 'COMPLEX';
+		if (occupancytype.group.objid == 'A' && app.actualtotalfloorarea <= 1500 && app.actualnumfloors <= 3) 
+			txntype = "SIMPLE";
+		else if (occupancytype.group.objid == 'E' && app.actualtotalfloorarea <= 1500 && app.actualnumfloors <= 2) 
+			txntype = "SIMPLE";
+		else if (occupancytype.group.objid == 'F' && app.actualtotalfloorarea <= 1500) 
+			txntype = "SIMPLE";
+		returns txntype;	
+    }
+
 	//check if 	professional exists in the obo_professional database
     private void saveProfessional( def o ) {
     	if(!o.objid) return;
@@ -240,13 +252,6 @@ class OccupancyPermitPersistenceInterceptor {
 			}
 		}	
 
-		/*
-		app.each { k,v->
-			println k+"="+v;
-		}
-		throw new Exception("save occupancy txntype " + app.bldgpermit?.txntype );
-		*/
-
 		//check first all professionals if exist in the obo_professional table
 		app.objid = "OAPP" + new UID();
 		app.orgcode = env.ORGID;
@@ -265,7 +270,9 @@ class OccupancyPermitPersistenceInterceptor {
 
 		app.createdby = [objid: env.USERID, name: env.FULLNAME];
 		app.dtcreated = dateSvc.getServerDate();
+
 		app.fixedcost = calcFixedCost( app ); 
+		app.txntype = getTxnType( app );
 	}
 
 	@After(pattern="PersistenceService.create", eval="#{ args[0]._schemaname == 'occupancy_permit' }")
@@ -320,6 +327,7 @@ class OccupancyPermitPersistenceInterceptor {
 			entityEm.find( [objid: app.applicant.objid]).update( app.applicant );
 		}
 	}
+
 
 	@After(pattern="PersistenceService.read", eval="#{ args[0]._schemaname == 'vw_occupancy_permit' }")
 	public void afterOpenApplication(def evt) {

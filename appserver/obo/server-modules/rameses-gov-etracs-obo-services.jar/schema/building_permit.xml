@@ -8,7 +8,6 @@
 
 		<field name="trackingno" searchable="true" indexed="true"/>
 		<field name="taskid" />
-		<field name="controlid" />
 		<field name="txnmode" />
 
 		<!-- VALUES ARE SIMPLE OR COMPLEX -->
@@ -34,9 +33,6 @@
 
 		<field name="dtproposedconstruction" type="date" />
 		<field name="dtexpectedcompletion" type="date"/>
-
-		<field name="zoneclassid" />
-		<field name="zone" />
 
 		<field name="location_lotno" />
 		<field name="location_blockno" />

@@ -245,6 +245,18 @@ class BuildingPermitPersistenceInterceptor {
 		}
     }
 
+    private def getTxnType( def app ) {
+    	def occupancytype = app.occupancytype;
+		def txntype = 'COMPLEX';
+		if (occupancytype.group.objid == 'A' && app.totalfloorarea <= 1500 && app.numfloors <= 3) 
+			txntype = "SIMPLE";
+		else if (occupancytype.group.objid == 'E' && app.totalfloorarea <= 1500 && app.numfloors <= 2) 
+			txntype = "SIMPLE";
+		else if (occupancytype.group.objid == 'F' && app.totalfloorarea <= 1500) 
+			txntype = "SIMPLE";
+		return txntype;	
+    }
+
 	@Before(pattern="PersistenceService.create", eval="#{ args[0]._schemaname == 'building_permit' }")
 	public void beforeCreateApplication(def evt) {
 		def app = evt.args[0];
@@ -265,7 +277,6 @@ class BuildingPermitPersistenceInterceptor {
 		app.objid = "BAPP" + new UID();
 		app.orgcode = env.ORGID;
 		app.occupancytypeid = app.occupancytype?.objid;
-		app.zoneclassid = app.zoneclass?.objid;
 		app.supervisorid = app.supervisor?.objid;
 		app.apptype = app.apptype?.toUpperCase();
 
@@ -284,6 +295,7 @@ class BuildingPermitPersistenceInterceptor {
 		app.createdby = [objid: env.USERID, name: env.FULLNAME];
 		app.dtcreated = dateSvc.getServerDate();
 		app.fixedcost = calcFixedCost( app ); 
+		app.txntype = getTxnType( app );
 	}
 
 	@After(pattern="PersistenceService.create", eval="#{ args[0]._schemaname == 'building_permit' }")
@@ -325,9 +337,6 @@ class BuildingPermitPersistenceInterceptor {
 	@Before(pattern="PersistenceService.update", eval="#{ args[0]._schemaname == 'building_permit' }")
 	public void beforeUpdateApplication(def evt) {
 		def app = evt.args[0];
-		if( app.zoneclass?.objid ) {
-			app.zoneclassid = app.zoneclass.objid;
-		}
 		if( app.supervisor ) {
 			app.supervisorid = app.supervisor.objid;
 		}

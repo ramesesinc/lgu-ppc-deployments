@@ -32,10 +32,6 @@
 		<field name="numfloors" />
 		<complex name="worktypes" serializer="default"/>
 
-		<field name="zoneclass_objid" />
-		<field name="zoneclass_title" />
-		<field name="zone" />
-
 		<field name="location_unitno" />
 		<field name="location_bldgno" />
 		<field name="location_bldgname" />
