@@ -24,6 +24,9 @@ class BuildingPermitPersistenceInterceptor {
 	@DataContext("building_permit_doc")
 	def subdocEm;
 
+	@DataContext("vw_building_permit_doc")
+	def vwDocEm;
+
 	@DataContext("building_permit_requirement")
 	def reqEm;
 
@@ -130,7 +133,19 @@ class BuildingPermitPersistenceInterceptor {
     //create permit for capture
     private def savePermit( def app ) {
     	if(!app.permitno) return null;
-    	def doctype = doctypeEm.find( [objid: "BUILDING_PERMIT"] ).first();
+
+    	//find the permit doc.
+    	def bdoc = vwDocEm.find( [appid: app.objid ] ).where( "doctype.objid = 'BUILDING_PERMIT' " ).first();
+    	if(!bdoc) {
+    		bdoc = [:];
+			bdoc.appid = app.objid;
+			bdoc.doctype = doctypeEm.find( [objid: "BUILDING_PERMIT"] ).first();
+			bdoc.amount = 0;
+			bdoc.state = 0;
+			bdoc = subdocEm.create( bdoc );			
+    	}
+
+    	def doctype = bdoc.doctype;
 		def bp = [:];	
 		bp.appid = app.objid;
 		bp.doctype = doctype;	
@@ -144,7 +159,9 @@ class BuildingPermitPersistenceInterceptor {
 		bp.endorserid = doctype.endorserid;
 		bp.approverid = doctype.approverid;
 		bp.reportheader = doctype.reportheader;
-		return controlEm.create( bp );
+		def ctl = controlEm.create( bp );
+		subdocEm.find([objid: bdoc.objid] ).update( [controlid: ctl.objid] );	
+		return ctl;
     }
 
     //save payment
@@ -307,6 +324,12 @@ class BuildingPermitPersistenceInterceptor {
 		entityEm.find( [objid: app.applicant.objid ] ).update( [appid: app.objid] );
 
 		if( app.txnmode == "CAPTURE" ) {
+			if( app.task.state == 'requirement-verification' ) {
+				saveRequirements( app );
+			}
+			if( app.task.state != 'end') {
+				saveInitialDocuments( app );
+			}
 			def tsk = saveTask( app );
 			def permit = savePermit( app );
 			savePayment( app );
@@ -314,13 +337,6 @@ class BuildingPermitPersistenceInterceptor {
 			u.taskid = tsk.taskid;
 			if( permit?.objid ) u.controlid = permit.objid;
 			appEm.find([objid:app.objid]).update( u );
-
-			if( app.task.state == 'requirement-verification' ) {
-				saveRequirements( app );
-			}
-			if( app.task.state != 'end') {
-				saveInitialDocuments( app );
-			}
 		}
 		else {
 			saveEntities( app );

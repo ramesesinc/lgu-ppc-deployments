@@ -1,7 +1,9 @@
 UPDATE building_permit SET taskid = NULL,applicantid=NULL;
 UPDATE building_evaluation_finding SET supersederid = NULL,transmittalid=NULL;
 UPDATE building_permit_requirement SET transmittalid=NULL;
+UPDATE building_permit_doc SET controlid=NULL;
 UPDATE building_evaluation SET taskid = NULL;
+DELETE FROM obo_control;
 DELETE FROM building_permit_fee;
 DELETE FROM building_permit_info;
 DELETE FROM building_permit_rpu;
