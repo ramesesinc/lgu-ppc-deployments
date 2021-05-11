@@ -1,0 +1,63 @@
+import com.rameses.annotations.*; 
+
+/****************************************************************
+* This should apply to both Building and Occupancy Claim Stub
+******************************************************************/
+class OboAppClaimStubReportInterceptor {
+	
+	@DataContext(dynamic=true)
+	def db;
+
+	@DataContext("vw_obo_app")
+	def appEm;
+
+	@After(pattern="FormReportService.getData", eval="#{args[0].reportid == 'obo_app_claimstub' }")
+	public void getClaimStubReport( def evt ) {
+		def p = evt.args[0];
+		def result = evt.result;
+		def id = p.parameters.objid;
+
+		def app = appEm.find( [objid: id ]).first();
+		def permitType = app.doctitle;
+
+		def taskEm = db.lookup( app.processname + "_task" );
+
+		def ea = appEm.find( [objid: id ] ).first();
+		def r = taskEm.find( [refid: id, state: 'requirement-verification'] ).orderBy("dtcreated DESC").first();
+		if( r ) {
+			ea.startdate = r.startdate;
+			ea.enddate = r.enddate;
+			ea.receiver = r.assignee;		
+			ea.dtreceived = r.enddate;			
+		};
+		ea.permittype = permitType;
+		result.data = ea;
+	}	
+
+	@Before(pattern="JasperEmailQueueService.send", eval="#{args[0].reportid == 'obo_app_claimstub' }")
+	public void beforeQueueEmail( def evt ) {
+		def p = evt.args[0];
+		def ea = appEm.find( [objid: p.refid ] ).first();
+		if ( !p.to ) p.to = ea.contact.email;
+		p.info = ea;
+	}
+
+    @Before(pattern="JasperReportEmailService.send", eval="#{ args[0].reportid == 'obo_app_claimstub' }", index=-10000)
+    public void emailClaimstub(def evt) {
+        def o = evt.args[0];
+        def refid = o.refid;
+        o.attachments = [
+            [ 	title: "ClaimStub" + ".pdf", 
+            	reportid: o.reportid, 
+            	parameters: [objid: refid ], 
+            	template: "reports/obo/application_claimstub" 
+            ]
+        ];
+        o.to = o.to;
+        o.subject = o.subject;
+        o.message = o.message;
+        o.connection = "obo-email-server";
+    } 
+
+
+}

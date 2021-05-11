@@ -23,6 +23,6 @@ SELECT
  op.controlno AS occpermitno, 
  op.dtissued AS occpermitdtissued 
 FROM occupancy_rpu orpt
-INNER JOIN vw_occupancy_permit app  ON orpt.appid=app.objid
+INNER JOIN vw_occupancy_certificate app  ON orpt.appid=app.objid
 INNER JOIN vw_building_permit bp ON app.bldgpermitid=bp.objid 
 LEFT JOIN obo_control op ON app.controlid = op.objid 

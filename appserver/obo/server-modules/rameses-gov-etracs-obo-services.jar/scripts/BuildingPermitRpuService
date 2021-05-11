@@ -9,15 +9,6 @@ import enterprise.utils.*;
 
 public class BuildingPermitRpuService  {
 
-	@DataContext("building_permit_rpu")
-	def rpuEm;
-
-	@DataContext("building_permit_entity")
-	def entityEm;
-
-	@DataContext("building_permit")
-	def appEm;
-
 	@Service(value="RPTCertificationOnlineService", connection="rpt")
 	def rptSvc;
 
@@ -27,11 +18,42 @@ public class BuildingPermitRpuService  {
     @Service(value="EntityService", connection="entity")
     def entitySvc;
 
-    @DataContext("vw_building_permit")
-	def vwAppEm;
+    @Service("OboAppDocService")
+    def appDocSvc;
+
+    @Service("OboAppFeeService")
+    def appFeeSvc;
+
+
+	@Service("BillingRuleService")
+	def billingRuleSvc;
 
 	@Service("DateService")
 	def dateSvc;
+
+	@DataContext("building_permit_rpu")
+	def rpuEm;
+
+	@DataContext("obo_app_entity")
+	def entityEm;
+
+	@DataContext("building_permit")
+	def appEm;
+
+    @DataContext("vw_building_permit")
+	def vwAppEm;
+
+	@DataContext("obo_itemaccount")
+	def itemAcctEm;
+
+	@DataContext("obo_app_doc")
+	def docEm;
+
+	@DataContext("obo_doctype")
+	def docTypeEm;
+
+	@DataContext("obo_payment")
+	def paymentEm;
 
 	@ProxyMethod
 	public void generateDocs( def o ) {
@@ -45,7 +67,7 @@ public class BuildingPermitRpuService  {
 			app = appEm.find( [objid: rpu.appid ]).first();
 			list = [rpu];
 		}
-		
+
 		list.each {
 			def params = [:];
 			params.entityid = entityEm.find( [objid: it.ownerid] ).first()?.profileid;			
@@ -88,8 +110,23 @@ public class BuildingPermitRpuService  {
 				rpuEm.find( [objid: it.objid ]).update( u );
 			}
 		}
+		assessFees( [appid: app.objid ] );
 	}
 
+	@ProxyMethod
+	public void assessFees( def o ) {
+		if(!o.appid) throw new Exception("appid is required in assess fees");
+		
+		//search if there is the RPT_DOCUMENT if not create it.
+		def doc = appDocSvc.findDoc( [appid:o.appid, doctypeid:'BUILDING_RPT', create_if_not_exist: true] );
+
+		def factBuilder = new FactBuilder();
+		appFeeSvc.assess( [factBuilder: factBuilder, parentid: doc.objid, savefees: true ] );
+
+		factBuilder.facts.findAll{ it instanceof RpuEntry }.each {
+			rpuEm.find( [objid: it.objid] ).update( [taxclearancefee: it.taxclearancefee, truecopycertfee: it.truecopycertfee ] );	
+		}
+	}
 
  	@ProxyMethod
     public def findRpu( def params ) {
@@ -136,6 +173,51 @@ public class BuildingPermitRpuService  {
 		info.appid = params.appid;
         return info;
     }
+
+    @ProxyMethod
+    public void validateRptDocs(def o) {
+		if(!o.appid) throw new Exception("Please include appid in BuildingPermitRpuService.validateRptDocs");
+    	def exists = rpuEm.find( [appid: o.appid ]).where("(truecopycertid IS NULL OR taxclearanceid IS NULL)").exists();
+    	if(exists)
+    		throw new Exception("Please generate the RPT Documents first before proceeding");
+    }
+
+    //This is called by the obo.actions.AddBuildingRpuInfo for the rules
+    @ProxyMethod
+    public def getRpuFacts(def o) {
+		if(!o.appid) throw new Exception("Please include appid in BuildingPermitRpuService.validateRptDocs");
+		def rptList = rpuEm.find( [appid: o.appid ] ).list();
+		def r = [:];	
+		r.totalcount = rptList.size();
+		r.byownercount = rptList.groupBy{ it.ownerid }.size();
+
+		def facts = [];
+		facts << new RpuCount( r );
+		rptList.each {
+			facts << new RpuEntry( [objid: it.objid, ownerid: it.ownerid] );
+		}	
+		return facts;
+    }
+
+    @ProxyMethod
+    public void postPayment( def o ) {
+    	if(!o.appid) throw new Exception("Please include appid in BuildingPermitRpuService.validateRptDocs");
+    	//find the payment made
+
+		def pmt = paymentEm.find( [appid: o.appid ]).first();
+		def refno = pmt.refno;
+		def refdate = pmt.refdate;
+
+		def rpuList = rpuEm.find( [appid: o.appid ] ).list();
+		rpuList.each {
+			if(it.taxclearanceid && it.taxclearancefee) 
+				rptSvc.postPayment( [objid:it.taxclearanceid, orno:refno, ordate:refdate, oramount:it.taxclearancefee ] );		
+			if(it.truecopycertid && it.truecopycertfee) 
+				rptSvc.postPayment( [objid:it.truecopycertid, orno:refno, ordate:refdate, oramount:it.truecopycertfee ] );		
+		}
+
+    }
+
 
 
 }

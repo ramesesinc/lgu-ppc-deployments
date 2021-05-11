@@ -3,7 +3,7 @@ import com.rameses.annotations.*;
 
 class OccupancyPermitInspectionTask {
 	
-	@DataContext("vw_occupancy_permit")
+	@DataContext("vw_occupancy_certificate")
 	def vwOccupancyPermit;
 	
 	@Schedule(interval=1, timeUnit="MINUTES")
