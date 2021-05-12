@@ -1074,3 +1074,18 @@ from obo_app a
 	left join obo_control ctl on (ctl.appid = a.objid and ctl.doctypeid = 'OCCUPANCY_CERTIFICATE')
 go 
 
+
+
+CREATE TABLE obo_appno (
+  appno varchar(50) NOT NULL,
+  appid varchar(50) NOT NULL DEFAULT '',
+  PRIMARY KEY (appid,appno) ,
+  CONSTRAINT fk_obo_appno_appid FOREIGN KEY (appid) REFERENCES obo_app (objid)
+)
+go 
+
+INSERT INTO obo_appno 
+SELECT appno, objid FROM
+obo_app WHERE NOT(appno IS NULL)
+go 
+
