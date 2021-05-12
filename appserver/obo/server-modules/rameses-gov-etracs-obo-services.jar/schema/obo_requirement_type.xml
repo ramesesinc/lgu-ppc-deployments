@@ -2,13 +2,12 @@
  selection type: 
    0 = always required
    1 = optional. To be provided by applicant
-
 -->
 <schema>
 	<element tablename="obo_requirement_type">
 		<field name="objid" primary="true" visible="true"/>
 		<field name="title" />
 		<field name="sortorder" />
-		<field name="permittype" />
+		<field name="apptype" />
 	</element>
 </schema>

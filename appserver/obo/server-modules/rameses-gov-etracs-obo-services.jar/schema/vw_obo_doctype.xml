@@ -6,6 +6,7 @@
 		<field name="sortorder" />
 		<field name="type" />
 		<field name="template" />
+		<field name="reportheader" />
 		<field name="autocreate" />
 		<field name="issuetype" />
 		<field name="requirefee" />
@@ -18,6 +19,7 @@
 		<field name="approverid" />
 		<field name="refdoc"/>
 		<field name="role"/>
+		<field name="includeinemail" />
 	</element>
 </schema>	
 

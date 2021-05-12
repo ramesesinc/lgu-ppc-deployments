@@ -10,7 +10,7 @@ class OccupancyRpuWorkflowInterceptor {
 	def dateSvc;
 
 	//trigger when entering evaluation state
-	@After(pattern="WorkflowTaskService.signal", eval="#{args[0].processname == 'occupancy_permit' && args[0].action == 'send-for-inspection' }", index=1000) 
+	@After(pattern="WorkflowTaskService.signal", eval="#{args[0].processname == 'occupancy_certificate' && args[0].action == 'send-for-inspection' }", index=1000) 
 	public void fireRpuEntryOnInspection( def evt ) {
 		def p = evt.args[0];
 		def r = evt.result;

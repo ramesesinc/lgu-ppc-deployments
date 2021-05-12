@@ -1,0 +1,282 @@
+import com.rameses.annotations.*;
+import java.rmi.server.*;
+
+class OccupancyCertificatePersistenceInterceptor {
+	
+	@Service("OboAppRequirementService")
+	def reqSvc;
+
+	@Service("OboAppProfessionalService")
+	def profSvc;
+
+	@Service("OboAppDocService")
+	def appDocSvc;
+
+	@Service("OboAppService")
+	def appSvc;
+
+	@Service("OboConstructionCostRuleService")
+	def costSvc;
+
+	@Service("DateService")
+	def dateSvc;
+
+	@Service("WorkflowTaskService")
+	def wfSvc;
+
+	@DataContext("occupancy_certificate")
+	def appEm;
+
+	@DataContext("occupancy_certificate_task")
+	def appTaskEm;
+
+	@DataContext("obo_control")
+	def controlEm;
+
+	@DataContext("vw_occupancy_certificate")
+	def vwAppEm;
+
+	@DataContext("obo_app_entity")
+	def entityEm;
+
+	@DataContext("obo_payment")
+	def paymentEm;
+
+	@DataContext("obo_app_fee")
+	def feeEm;
+
+	@DataContext("occupancy_rpu")
+	def rpuEm;
+
+	@Env
+	def env;
+
+	private def calcFixedCost( def app ) {
+		if( app.apptype == null || app.actualtotalfloorarea==null || app.occupancytype==null ) {
+			def zapp = vwAppEm.find( [objid: app.objid ] ).select("apptype,actualtotalfloorarea,occupancytype.*").first();
+			if(app.apptype==null) app.apptype = zapp.apptype;
+			if(app.actualtotalfloorarea==null) app.actualtotalfloorarea = zapp.actualtotalfloorarea;
+			if(app.occupancytype==null) app.occupancytype = zapp.occupancytype;
+		}
+		//calculate the cost first before receiving		
+		def param = [:];
+		param.app = [apptype:app.apptype, totalfloorarea:app.actualtotalfloorarea];
+		param.occupancytype = app.occupancytype;
+		return costSvc.calc( param );
+	}
+
+	private def getTxnType( def app ) {
+    	def occupancytype = app.occupancytype;
+		def txntype = 'COMPLEX';
+		if (occupancytype.group.objid == 'A' && app.actualtotalfloorarea <= 1500 && app.actualnumfloors <= 3) 
+			txntype = "SIMPLE";
+		else if (occupancytype.group.objid == 'E' && app.actualtotalfloorarea <= 1500 && app.actualnumfloors <= 2) 
+			txntype = "SIMPLE";
+		else if (occupancytype.group.objid == 'F' && app.actualtotalfloorarea <= 1500) 
+			txntype = "SIMPLE";
+		return txntype;	
+    }
+
+	//check if 	professional exists in the obo_professional database
+    private void saveAppProfessionals( def app ) {
+    	if(!app.professionals) return;
+    	app.professionals.each {
+    		def p = [:];
+			p.designprofessional =  it.designprofessional ;
+			p.supervisor =  it.supervisor;
+			p.sectionid =  it.sectionid;
+			p.appid = app.objid;
+			if(p.designprofessional?.objid || p.supervisor?.objid) {
+				profSvc.addAppProfessional( p );					
+			}
+    	}
+    }
+
+
+	//fire the workflow to start the process
+    private void startWorkflow( def app ) {
+		def p = [:];
+		p.processname = 'occupancy_certificate';
+		p.refid = app.objid;
+		p.startdate = dateSvc.getServerDate();
+		p.info = app;
+		p.assignee = [objid:env.USERID, name:env.FULLNAME];		
+		wfSvc.start(p);
+    }
+
+    //create task
+    private def saveTask( def app ) {
+    	//add end application task
+		def atask = [:];
+		atask.refid = app.objid;
+		atask.state =  app.task.state;
+		atask.dtcreated = dateSvc.getServerDate();
+		return appTaskEm.create( atask );
+    }
+
+     //create permit for capture
+    private def savePermit( def app ) {
+    	if(!app.permitno) return null;
+    	def permit = [:];
+    	permit.appid = app.objid;
+    	permit.doctypeid = "OCCUPANCY_CERTIFICATE";	
+    	permit.controlno = app.permitno;
+    	permit.dtissued = app.permitdtissued;
+    	permit.expirydate = app.permitexpirydate;
+    	permit.state = 3;
+    	return appDocSvc.createAndIssue( permit );
+    }
+
+    //save payment
+    private def savePayment( def app ) {
+    	if(!app.receiptno) return null;
+		def pmt = [:];
+		pmt.appid = app.objid;
+		pmt.refno = app.receiptno;
+		pmt.refdate = app.receiptdate;
+		pmt.amount = app.amtpaid;
+		pmt.reftype = "cashreceipt";
+		pmt.voided = 0;
+		return paymentEm.create( pmt );	
+    }
+
+    private void saveEntities( def app ) {
+    	if(!app.entities) return;
+    	app.entities.each {
+    		if( it.objid != app.applicantid ) {
+				it.appid = app.objid;
+				entityEm.create( it );    		
+    		}
+		}
+    }
+
+	private void saveDocuments( def app ) {
+		def doclist = [];
+		if(app.infos) {
+			def bfp = [:];
+			bfp.objid = app.objid + ":BFP_SALES_TAX";
+			bfp.doctypeid = "BFP_SALES_TAX";
+			bfp.infos = app.infos;
+			doclist << bfp;		
+		}
+    	appDocSvc.saveInitial(  [appid: app.objid, apptype: "occupancy_certificate", doclist: doclist]  );
+    }
+
+	private void saveRequirements( def app ) {
+    	reqSvc.saveInitial( [apptype: 'occupancy_certificate', appid: app.objid ] );
+    }
+
+ 	@Before(pattern="PersistenceService.create", eval="#{ args[0]._schemaname == 'occupancy_certificate' }")
+	public void beforeCreateApplication(def evt) {
+		def app = evt.args[0];
+		if(!app.applicant) throw new Exception("Applicant is required");
+
+		if(app.trackingno) {
+			def orgno = env.ORGID;
+			if( !app.trackingno.startsWith(orgno) ) {
+				app.trackingno = orgno + "-" + app.trackingno;
+			}
+		}	
+
+		//check first all professionals if exist in the obo_professional table
+		app.objid = "OAPP" + new UID();
+		app.doctypeid = "OCCUPANCY_CERTIFICATE";
+		app.orgcode = env.ORGID;
+		app.occupancytypeid = app.occupancytype?.objid;
+		app.apptype = app.apptype?.toUpperCase();
+
+		//remove appid from applicant so it can be saved
+		app.applicant.remove("appid");
+		app.applicant = entityEm.create( app.applicant );
+		app.applicantid = app.applicant.objid;
+
+		//save the supervisor
+		def supervisor = profSvc.saveProfessional( app.supervisor );		
+		if(supervisor) app.supervisor = supervisor;		
+
+		app.createdby = [objid: env.USERID, name: env.FULLNAME];
+		app.dtcreated = dateSvc.getServerDate();
+		app.fixedcost = calcFixedCost( app ); 
+		app.txntype = getTxnType( app );
+	}
+
+	@After(pattern="PersistenceService.create", eval="#{ args[0]._schemaname == 'occupancy_certificate' }")
+	public void afterCreateApplication(def evt) {
+		def app = evt.args[0];
+		def result = evt.result;
+
+		//save appid of entity
+		entityEm.find( [objid: app.applicant.objid ] ).update( [appid: app.objid] );
+
+		if( app.txnmode == "CAPTURE" ) {
+			saveTask( app );			
+			if(!app.appno) {
+				appSvc.assignAppno( [appid: app.objid ] );
+			}	
+			if( app.task.state == 'requirement-verification' ) {
+				saveRequirements( app );
+			}
+			if( app.task.state != 'end') {
+				saveDocuments( app );
+			}
+			savePermit( app );
+			savePayment( app );
+		}
+		else {
+			saveEntities( app );
+			saveAppProfessionals( app );
+			saveDocuments( app );
+			saveRequirements( app );
+			startWorkflow( app );
+		}
+	}
+
+	//OCCUPANCY PERMIT APPLICATION
+	@Before(pattern="PersistenceService.update", eval="#{ args[0]._schemaname == 'occupancy_certificate' }")
+	public void beforeUpdateApplication(def evt) {
+		def app = evt.args[0];
+		if( app.supervisor ) {
+			app.supervisorid = app.supervisor.objid;
+		}
+		if( app.actualtotalfloorarea ) {
+			app.fixedcost = calcFixedCost( app );	
+		}
+		if( app.occupancytype?.objid  ) {
+			app.occupancytypeid = app.occupancytype?.objid;
+			app.fixedcost = calcFixedCost( app );		
+		}
+		if( app.applicant?.objid ) {
+			entityEm.find( [objid: app.applicant.objid]).update( app.applicant );
+		}
+	}
+
+
+	@After(pattern="PersistenceService.read", eval="#{ args[0]._schemaname == 'vw_occupancy_certificate' }")
+	public void afterOpenApplication(def evt) {
+		def p = evt.args[0];
+		def a = evt.result;
+		a.occupancytype.title = a.occupancytype.title?.toUpperCase();
+
+		//auto compute fees after opening:
+		a.amount = feeEm.find([appid:a.objid]).select("c:{SUM(amount)}").val();
+		a.payment = paymentEm.find([appid: a.objid ]).where("voided=0").orderBy("refdate DESC, refno DESC").first();
+	}
+
+
+	@Before(pattern="PersistenceService.removeEntity", eval="#{ args[0]._schemaname == 'occupancy_certificate' }")
+	public void beforeRemoveApp( def evt ) {
+		def p = evt.args[0];
+		def app = vwAppEm.find( [objid: p.objid]).first();
+		if( app.task.state != 'receiving') 
+			throw new Exception("Application can only be removed in receiving state");
+
+		def u = [appid: app.objid ];	
+		appEm.find([objid: app.objid]).update( [applicantid: "{NULL}", taskid: "{NULL}" ] );
+		entityEm.find( u ).delete();
+		appTaskEm.find( [refid: app.objid] ).delete();
+		appDocSvc.deleteDocuments( u );
+		profSvc.deleteAppProfessionals( u );
+		reqSvc.deleteRequirements( u );
+	} 
+
+}

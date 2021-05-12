@@ -1,0 +1,64 @@
+import com.rameses.annotations.*;
+
+class OboAppTaskitemWorkflowPersistenceInterceptor {
+	
+	@Service("DateService")
+	def dateSvc;
+
+	@DataContext("vw_obo_app_taskitem")
+	def vwTaskAppTaskitemEm;
+
+	@DataContext("obo_taskitem_type_role")
+	def taskitemTypeRole;
+
+	@DataContext(dynamic=true)
+	def db;
+
+	@Env
+	def env;
+
+	/************************************************************
+	* Attach roles when opening or after signalling and starting
+	*************************************************************/
+	@After( pattern="WorkflowTaskService.(signal|start|findTask)", eval="#{ args[0].processname == 'obo_app_taskitem' }" )
+	public void customizeRole(  def evt ) {
+		def r = evt.result;
+
+		//we have to add domain to make security applicable
+		r.domain = "OBO"; 
+
+		//get the corrected roles for this
+		def typeid = vwTaskAppTaskitemEm.find( [objid: r.refid ] ).select("typeid").val();
+		def typeRoles = taskitemTypeRole.find([typeid: typeid]).list();
+		r.allowedstates = typeRoles*.state;
+
+		def replaceRole = { state, itm->
+			def rol = typeRoles.find{ it.state == state };
+			if(rol) itm.role = rol.role;
+		}
+		r.transitions.each { tran->
+			replaceRole( tran.to,  tran );
+		}
+		replaceRole( r.state, r ); //replace also the role for this state
+		env._notificationList = [ "obo_app_taskitem:" + typeid.toLowerCase() ];
+	}
+
+	@After( pattern="WorkflowTaskService.assignToMe", eval="#{ args[0].processname == 'obo_app_taskitem' }" )
+	public void assignToMe(  def evt ) {
+		def a = evt.args[0];
+		//get the corrected roles for this
+		def typeid = vwTaskAppTaskitemEm.find( [objid: a.refid ] ).select("typeid").val();
+		env._notificationList = [ "obo_app_taskitem:" + typeid.toLowerCase() ];
+	}
+
+
+	@After( pattern="PersistenceService.read", eval="#{ args[0]._schemaname == 'vw_obo_app_taskitem' }" )
+	public void afterOpenTaskitem(  def evt ) {
+		def r = evt.result;
+		def appEm =  db.lookup( r.app.schemaname );
+		def app = appEm.find( [objid: r.appid ] ).first();
+		app.putAll( r.app );
+		r.app = app;
+	}
+
+}
