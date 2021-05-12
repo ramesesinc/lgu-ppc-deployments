@@ -6,7 +6,7 @@ import java.text.*;
 import treasury.utils.*;
 import treasury.facts.*;
 
-class OboApplicationCloudInitialService {
+class OboAppCloudInitialService {
 	
 	@Service(value="obo/OnlineBuildingPermitDownloadService", connection="cloud-server")
     def bldgSvc;
@@ -14,25 +14,23 @@ class OboApplicationCloudInitialService {
 	@Service(value="obo/OnlineOccupancyPermitDownloadService", connection="cloud-server")
     def occupancySvc;
 
-    @DataContext(dynamic=true)
-    def db;
+    @DataContext("vw_obo_app")
+    def vwAppEm;
 
     @Env
     def env;
 
     @ProxyMethod
     public def getApplication( def o  ) {
-    	if( !o.permittype) throw new Exception("permit type is required");
-    	if( !o.trackingno ) throw new Exception("trackingno is required");
-
-    	def vwAppEm = db.lookup( "vw_" + o.permittype.toLowerCase() );
+    	if( !o.appclass) throw new Exception("appclass is required in OboAppCloudInitialService.getApplication");
+    	if( !o.trackingno ) throw new Exception("trackingno is required in OboAppCloudInitialService.getApplication");
 
     	//check first if the application already exists
     	def app = vwAppEm.find( [trackingno: o.trackingno ]).first();
     	if(app) throw new Exception("Application already exists. It is currently at " + app.task?.state );
 
     	def cloudSvc;
-    	if( o.permittype== "building_permit") {
+    	if( o.appclass== "building_permit") {
     		cloudSvc = bldgSvc;
     	}
     	else {

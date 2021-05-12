@@ -18,6 +18,9 @@ class OboAppDocFormReportInterceptor {
 	def evalTaskEm;
 
 	@DataContext("vw_obo_payment")
+	def vwDocPayEm;
+
+	@DataContext("obo_payment")
 	def payEm;
 
 	@DataContext("vw_obo_app")
@@ -132,11 +135,15 @@ class OboAppDocFormReportInterceptor {
 			feeParentid = papp.objid;
 		}
 
-		def pay = payEm.find( [ parentid: feeParentid ] ).select("payment.refno,payment.refdate,amount:{SUM(amount)}").groupBy("payment.refno,payment.refdate").first();
-		if( pay?.payment ) {
-			docsub.receiptno = pay.payment.refno;
-			docsub.receiptdate = pay.payment.refdate;
-			docsub.amount = pay.amount;		
+		def rct = payEm.find( [appid: docsub.appid ] ).first();
+		if( rct ) {
+			docsub.receiptno = rct.refno;
+			docsub.receiptdate = rct.refdate;
+			def pay = vwDocPayEm.find( [ parentid: feeParentid ] ).select("amount:{SUM(amount)}").groupBy("payment.refno,payment.refdate").first();
+			if( pay?.payment ) {
+				docsub.amount = pay.amount;		
+			}
+			docsub.receiptamount = rct.amount;
 		}
 
 		//load evaluator. find the associated task item
