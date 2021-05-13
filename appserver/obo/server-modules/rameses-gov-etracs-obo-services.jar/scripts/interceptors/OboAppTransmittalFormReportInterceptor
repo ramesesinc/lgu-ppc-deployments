@@ -8,9 +8,6 @@ class OboAppTransmittalFormReportInterceptor {
 	@DataContext("obo_doctype")
 	def doctypeEm;
 
-	@DataContext(dynamic=true)
-	def db;
-
 	@DataContext("obo_app_transmittal")
 	def transmittalEm;
 
@@ -68,18 +65,17 @@ class OboAppTransmittalFormReportInterceptor {
 				it.section = [type: [title: it.parent.type.title ]];
 			}	
 		}
-		def templateName = (t.app.appclass + "_" + t.type.replace("-","_") + "_TRANSMITTAL").toUpperCase();;
-		
-		def doctype = doctypeEm.find( [objid: templateName ] ).first();
-		if(!doctype) throw new Exception("document type " + templateName + " not found");
 
-		def appEm = db.lookup( t.app.schemaname );
-		def ea = appEm.find( [objid: t.appid ] ).first();
+		def doctypeid = (t.type.replace("-","_") + "_TRANSMITTAL").toUpperCase();;
+		def doctype = doctypeEm.find( [objid: doctypeid ] ).first();
+		if(!doctype) throw new Exception("document type " + doctypeid + " not found");
+
+		def ea = t.app;
 		ea.dtfiled = t.dtcreated;
 		ea.receiver = t.createdby;
 		ea.transmittalno = t.objid;
 		ea.transmittaltype = t.type;
-		ea.permittype = doctype.title;
+		ea.permittype = t.app.doctitle;
 		ea.items = items;
 		ea.endorserid = (t.endorserid) ? t.endorserid : doctype.endorserid;
 		ea.approverid = (t.approverid) ? t.approverid : doctype.approverid;
@@ -120,10 +116,7 @@ class OboAppTransmittalFormReportInterceptor {
 		def p = evt.args[0];
 
 		def t = transmittalEm.find([objid: p.refid ]).first();
-
-		def appEm = db.lookup(t.app.schemaname);
-		def ea = appEm.find( [objid: t.appid ] ).first();
-
+		def ea = t.app;
 		def templateName = (t.type + "_transmittal").toLowerCase();
 		if ( !p.to ) p.to = ea.contact.email;
 		p.info = ea;
