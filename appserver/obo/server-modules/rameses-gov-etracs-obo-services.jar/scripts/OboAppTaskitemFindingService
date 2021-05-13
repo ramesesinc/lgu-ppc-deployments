@@ -80,7 +80,7 @@ class OboAppTaskitemFindingService {
 		boolean hasItems = findingEm.find([appid:o.appid]).where("supersederid IS NULL AND state=2 AND transmittalid IS NULL").exists();
 		if(!hasItems) throw new Exception("There must be at least one finding that needs to be transmitted");			
 	
-		def docid = app.appclass.toUpperCase() + "_" + o.type.toUpperCase() + "_TRANSMITTAL";
+		def docid = o.type.toUpperCase() + "_TRANSMITTAL";
 		def doc = doctypeEm.find( [objid: docid] ).first();
 		if(!doc) throw new Exception("doctype " + docid + " not found");
 
