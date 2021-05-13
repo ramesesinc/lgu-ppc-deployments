@@ -151,7 +151,7 @@ public class OboAppFeeService  {
 	@ProxyMethod
 	public def assessAll( def o ) {
 		if(!o.appid) throw new Exception("appid is required in OboAppFeeService.assessAll");
-		def docList = vwDocEm.find( [appid: o.appid ]).where( "requirefee=1 AND (amount IS NULL OR amount=0) ").list();
+		def docList = vwDocEm.find( [appid: o.appid ]).where( "requirefee > 0 AND (amount IS NULL OR amount=0) ").list();
 		docList.each { v->
 			assess( [parentid: v.objid, savefees: true] );
 		}
