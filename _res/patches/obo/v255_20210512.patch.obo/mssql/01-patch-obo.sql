@@ -1,6 +1,23 @@
 #MIGRATION
 USE obo_puerto_new;
 
+insert into sys_signature ( 
+	objid, userid, user_name, displayname, position, signature, tag, system, state 
+) 
+SELECT 
+	objid, userid, user_name, displayname, position, signature, tag, system, state 
+FROM obo_puerto.dbo.sys_signature s 
+where objid not in (
+	select objid from sys_signature where objid = s.objid 
+)
+go 
+update aa set 
+	aa.signature = bb.signature 
+from sys_signature aa, obo_puerto.dbo.sys_signature bb 
+where aa.objid = bb.objid 
+go 
+
+
 INSERT INTO sys_sequence 
 SELECT * FROM obo_puerto.dbo.sys_sequence s 
 where s.objid not in (
@@ -19,6 +36,52 @@ where r.objid not in (
 	select objid from sys_user_role where objid = r.objid 
 )
 go 
+
+
+update aa set 
+	aa.endorserid = bb.endorserid, 
+	aa.approverid = bb.approverid 
+from 
+	obo_doctype aa, 
+	(
+		select objid, 
+			(select endorserid from obo_puerto.dbo.obo_doctype where objid = d.objid) as endorserid, 
+			(select approverid from obo_puerto.dbo.obo_doctype where objid = d.objid) as approverid 
+		from obo_doctype d 
+	)bb 
+where aa.objid = bb.objid 
+go 
+
+
+update aa set 
+	aa.endorserid = bb.newendorserid 
+from 
+	obo_doctype aa, 
+	( 
+		select distinct 
+			d.endorserid, s.objid as newendorserid
+		from obo_doctype d 
+			left join sys_signature s on s.objid = d.endorserid 
+		where d.endorserid is not null 
+	)bb 
+where aa.endorserid = bb.endorserid
+go 
+
+update aa set 
+	aa.approverid = bb.newapproverid 
+from 
+	obo_doctype aa, 
+	( 
+		select distinct 
+			d.approverid, s.objid as newapproverid
+		from obo_doctype d 
+			left join sys_signature s on s.objid = d.approverid 
+		where d.approverid is not null 
+	)bb 
+where aa.approverid = bb.approverid
+go 
+
+
 INSERT INTO obo_professional_info 
 SELECT * FROM obo_puerto.dbo.obo_professional_info p 
 where p.objid not in (
