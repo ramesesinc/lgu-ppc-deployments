@@ -28,5 +28,11 @@ services:
       - ../../_res/connections:/apps/etracs25/connections/ext
       - ../../_custom/module-server:/apps/etracs25/modules/ext/zzz-lgu-custom-module
 
-      - ./rameses-gov-etracs-bpls-online-services.jar:/services/modules/bpls/rameses-gov-etracs-bpls-online-services.jar
+      - ./module-client/reports:/apps/server/templates
+      - ../../_custom/module-client/etracs:/apps/server/templates/custom
+      - ../../_custom/output:/apps/server/output
+
       - ./dev-modules/rameses-gov-etracs-tools.jar:/services/modules/etracs/rameses-gov-etracs-tools.jar
+      - ./dev-modules/rameses-gov-etracs-bpls-online-services.jar:/services/modules/bpls/rameses-gov-etracs-bpls-online-services.jar
+      - ./dev-modules/rameses-gov-etracs-rptis-online-services.jar:/services/modules/rptis/rameses-gov-etracs-rptis-online-services.jar
+      - ./dev-modules/rameses-gov-etracs-rptis-services.jar:/services/modules/rptis/rameses-gov-etracs-rptis-services.jar
