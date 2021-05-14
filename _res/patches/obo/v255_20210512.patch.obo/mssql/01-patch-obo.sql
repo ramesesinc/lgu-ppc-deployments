@@ -1,5 +1,5 @@
-#MIGRATION
-USE obo_puerto_new;
+-- MIGRATION
+USE obo_puerto_template;
 
 insert into sys_signature ( 
 	objid, userid, user_name, displayname, position, signature, tag, system, state 
@@ -96,7 +96,7 @@ where p.objid not in (
 go 
 
 
-#start migration process
+-- start migration process
 INSERT INTO obo_app 
 (objid,doctypeid,appno,appdate,trackingno,contact_name,contact_detail,contact_email,contact_mobileno,txnmode,
 	orgcode,createdby_objid,createdby_name,dtcreated)
@@ -150,7 +150,7 @@ where objid not in (
 )
 go 
 
-#update applicantid and taskid
+-- update applicantid and taskid
 UPDATE a set 
 	a.applicantid = b.applicantid 
 from obo_app a, obo_puerto.dbo.building_permit b 
@@ -163,7 +163,7 @@ from building_permit b1, obo_puerto.dbo.building_permit b2
 WHERE b1.objid = b2.objid
 go 
 
-#insert building_permit_rpu
+-- insert building_permit_rpu
 INSERT INTO building_permit_rpu
 ( 
 objid,appid,tdno,tctno,pin,barangay,titleno,lotno,blockno,areasqm,classcode,ownerid,street,refid,bill_amtdue,
@@ -178,15 +178,54 @@ where objid not in (
 )
 go 
 
-#insert docs. we'll have to insert ignore first since there are documents that cannot be added because they are in conflict
-INSERT INTO obo_app_doc 
-(objid,appid,state,doctypeid,worktypes,remarks,amount,projectcost,equipmentcost)
-SELECT 
-objid,appid,state,doctypeid,worktypes,remarks,amount,projectcost,equipmentcost
-FROM obo_puerto.dbo.building_permit_doc d 
+-- insert docs. we'll have to insert ignore first since there are documents that cannot be added because they are in conflict
+select objid, appid, state, doctypeid, worktypes, remarks, amount, projectcost, equipmentcost
+into ztmp_obo_app_doc
+from obo_puerto.dbo.building_permit_doc d 
 where objid not in (
 	select objid from obo_app_doc where objid = d.objid 
 )
+order by appid,doctypeid
+go 
+
+INSERT INTO obo_app_doc (
+	objid, appid, state, doctypeid, worktypes, remarks, amount, projectcost, equipmentcost
+)
+select 
+	z.objid, z.appid, z.state, z.doctypeid, z.worktypes, z.remarks, z.amount, z.projectcost, z.equipmentcost
+from ( 
+	select appid,doctypeid,count(*) as icount 
+	from ztmp_obo_app_doc
+	group by appid,doctypeid 
+	having count(*) = 1
+)tmp1, ztmp_obo_app_doc z 
+where z.appid = tmp1.appid 
+	and z.doctypeid = tmp1.doctypeid 
+go 
+
+insert into obo_app_doc (
+	objid, appid, state, doctypeid, worktypes, remarks, amount, projectcost, equipmentcost
+)
+select 
+	z.objid, z.appid, z.state, z.doctypeid, z.worktypes, z.remarks, z.amount, z.projectcost, z.equipmentcost
+from ( 
+	select z.objid, 
+		(select count(*) from obo_puerto.dbo.building_permit_info where appid = z.appid and parentid = z.objid) as infocount, 
+		(select count(*) from obo_puerto.dbo.building_permit_fee where appid = z.appid and parentid = z.objid) as feecount 
+	from ( 
+		select appid,doctypeid,count(*) as icount 
+		from ztmp_obo_app_doc
+		group by appid,doctypeid 
+		having count(*) > 1 
+	)tmp1, ztmp_obo_app_doc z 
+	where z.appid = tmp1.appid 
+		and z.doctypeid = tmp1.doctypeid 
+)tmp2, ztmp_obo_app_doc z 
+where z.objid = tmp2.objid 
+	and (tmp2.infocount + tmp2.feecount) > 0 
+go 
+
+drop table ztmp_obo_app_doc
 go 
 
 
@@ -235,11 +274,11 @@ go
 
 
 INSERT INTO obo_control
-(objid,state,
+(objid,state,appid,
 doctypeid,controlno,dtissued,issuedby_objid,issuedby_name,expirydate,
 remarks,template,endorserid,approverid,reportheader)
 SELECT 
-objid,state,
+objid,state,appid,
 doctypeid,controlno,dtissued,issuedby_objid,issuedby_name,expirydate,
 remarks,template,endorserid,approverid,reportheader
 FROM obo_puerto.dbo.obo_control c 
@@ -249,7 +288,8 @@ where objid not in (
 go 
 
 
-#insert building permit document
+
+-- insert building permit document
 INSERT INTO obo_app_doc 
 (objid,appid,state,doctypeid,amount,controlid) 
 select * 
@@ -280,7 +320,7 @@ where (
 go 
 
 
-#update the controlid of the obo_app_doc
+-- update the controlid of the obo_app_doc
 UPDATE d1 set 
 	d1.controlid = bd.controlid 
 from obo_app_doc d1, obo_puerto.dbo.building_permit_doc bd 
@@ -288,14 +328,14 @@ WHERE d1.objid = bd.objid
 go 
 
 
-#correct the obo_control by updating the appid and doctypeid
+-- correct the obo_control by updating the appid and doctypeid
 UPDATE oc set 
 	oc.appid = doc.appid, oc.docid=doc.objid 
 from obo_control oc, obo_app_doc doc 
 WHERE doc.controlid=oc.objid
 go 
 
-#fix the current task states
+-- fix the current task states
 UPDATE  building_permit_task 
 SET state = 'trade-verification' 
 WHERE state='verification'
@@ -319,10 +359,10 @@ WHERE r1.objid = r2.objid
 go 
 
 
-drop index uix_building_permit_transmittal_taskid on obo_app_transmittal
-go 
-create index ix_taskid on obo_app_transmittal (taskid) 
-go 
+-- drop index uix_building_permit_transmittal_taskid on obo_app_transmittal
+-- go 
+-- create index ix_taskid on obo_app_transmittal (taskid) 
+-- go 
 
 INSERT INTO obo_app_transmittal 
 ( objid,appid,state,type,taskid,dtcreated,createdby_objid,createdby_name,approverid,endorserid,template,reportheader )
@@ -359,7 +399,7 @@ go
 
 
 
-#migrate the building evaluation,task and findings
+-- migrate the building evaluation,task and findings
 INSERT INTO obo_app_taskitem 
 (objid,appid,typeid)
 select * 
@@ -391,7 +431,7 @@ from obo_app_taskitem t1, obo_puerto.dbo.building_evaluation t2
 WHERE t1.objid = t2.objid
 go 
 
-#findings 
+-- findings 
 INSERT INTO obo_app_taskitem_finding
 (objid,appid,parentid,rootid,particulars,dtcreated,createdby_objid,createdby_name,state)
 SELECT
@@ -422,8 +462,8 @@ WHERE r1.objid = r2.objid
 go 
 
 
-#correct entries
-#fix the current task states
+-- correct entries
+-- fix the current task states
 UPDATE  building_permit_task 
 SET state = 'trade-verification' WHERE state='verification'
 go
@@ -433,7 +473,7 @@ UPDATE obo_app_taskitem_task
 SET state = 'end' WHERE state IN ('obo-processing', 'releasing' )
 go 
 
-#ADD PROFESSIONALS
+-- ADD PROFESSIONALS
 INSERT INTO obo_app_professional
 ( objid, appid, sectionid, designprofessionalid, supervisorid, doctypeid )
 select * 
@@ -458,7 +498,7 @@ where objid not in (
 go 
 
 
-#FIND THE sectionid per professional
+-- FIND THE sectionid per professional
 UPDATE ap set 
 	ap.sectionid = dt.sectionid 
 from obo_app_professional ap, obo_doctype dt 
@@ -466,7 +506,7 @@ WHERE ap.doctypeid = dt.objid
 go 
 
 
-## update views
+-- update views
 if object_id('dbo.vw_building_permit', 'V') IS NOT NULL 
    drop view dbo.vw_building_permit; 
 go
@@ -1139,13 +1179,13 @@ go
 
 
 
-CREATE TABLE obo_appno (
-  appno varchar(50) NOT NULL,
-  appid varchar(50) NOT NULL DEFAULT '',
-  PRIMARY KEY (appid,appno) ,
-  CONSTRAINT fk_obo_appno_appid FOREIGN KEY (appid) REFERENCES obo_app (objid)
-)
-go 
+-- CREATE TABLE obo_appno (
+--   appno varchar(50) NOT NULL,
+--   appid varchar(50) NOT NULL DEFAULT '',
+--   PRIMARY KEY (appid,appno) ,
+--   CONSTRAINT fk_obo_appno_appid FOREIGN KEY (appid) REFERENCES obo_app (objid)
+-- )
+-- go 
 
 INSERT INTO obo_appno 
 SELECT appno, objid FROM
