@@ -83,6 +83,9 @@
 		<field name="occupancystate" />
 		<field name="amount" type="decimal"/>
 
+		<field name="projectcost"  type="decimal"/>
+		<field name="fixedcost"  type="decimal"/>
+
 	</element>
 </schema>	
 

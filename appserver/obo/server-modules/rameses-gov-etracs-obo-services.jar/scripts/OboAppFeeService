@@ -103,6 +103,7 @@ public class OboAppFeeService  {
 		def infos = [];
 		def factBuilder = o.factBuilder;
 		if(!factBuilder) factBuilder = new FactBuilder();
+
 		factBuilder.facts << new BuildingInfo( vapp ); 
         factBuilder.facts << new OccupancyType( occ );
 

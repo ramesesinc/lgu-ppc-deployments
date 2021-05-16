@@ -55,7 +55,9 @@ SELECT
    ctl.reportheader,
 
    bp.title,
-   bp.location_text  
+   bp.location_text,
+   op.actualfixedcost AS fixedcost,
+   op.actualprojectcost AS projectcost  
 
 FROM obo_app a
 INNER JOIN occupancy_certificate op ON  a.objid = op.objid 

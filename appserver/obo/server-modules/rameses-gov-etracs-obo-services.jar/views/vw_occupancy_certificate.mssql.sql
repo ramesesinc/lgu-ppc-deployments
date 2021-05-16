@@ -73,7 +73,11 @@ ctl.endorserid AS endorserid,
 ctl.template AS template,
 ctl.reportheader AS reportheader,
 bp.title AS title,
-bp.location_text AS location_text 
+bp.location_text AS location_text,
+
+op.actualfixedcost AS fixedcost,
+op.actualprojectcost AS projectcost  
+
 from obo_app a 
 	inner join occupancy_certificate op on a.objid = op.objid  
 	inner join vw_building_permit bp on op.bldgpermitid = bp.objid  

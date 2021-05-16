@@ -49,6 +49,7 @@ class OccupancyCertificatePersistenceInterceptor {
 		def param = [:];
 		param.app = [apptype:app.apptype, totalfloorarea:app.actualtotalfloorarea];
 		param.occupancytype = app.occupancytype;
+
 		return costSvc.calc( param );
 	}
 
@@ -60,15 +61,16 @@ class OccupancyCertificatePersistenceInterceptor {
 			app.supervisorid = app.supervisor.objid;
 		}
 		if( app.actualtotalfloorarea ) {
-			app.fixedcost = calcFixedCost( app );	
+			app.actualfixedcost = calcFixedCost( app );	
 		}
 		if( app.occupancytype?.objid  ) {
 			app.occupancytypeid = app.occupancytype?.objid;
-			app.fixedcost = calcFixedCost( app );		
+			app.actualfixedcost = calcFixedCost( app );		
 		}
 		if( app.applicant?.objid ) {
 			entityEm.find( [objid: app.applicant.objid]).update( app.applicant );
 		}
+
 	}
 
 
