@@ -28,7 +28,6 @@ where name in (
 	'INSPECTION_REVISION',
 	'TASKITEMS_JOINSTATE'
 	) 
-	and state = 'deployed' 
 go 
 delete from sys_rule_deployed where objid in (
 	select objid from ztmp_sys_rule 
@@ -58,7 +57,6 @@ where name in (
 		'ADD_BFP_SALES_TAX',
 		'FINAL_ELECTRICAL_INSPECTION_FEE'
 	) 
-	and state = 'deployed' 
 go 
 delete from sys_rule_deployed where objid in (
 	select objid from ztmp_sys_rule 
