@@ -1,0 +1,85 @@
+import com.rameses.annotations.*;
+
+
+class OboAppTrackingService {
+	
+	@DataContext("vw_obo_app")
+	def vwAppEm;
+
+	@DataContext("vw_obo_app_task")
+	def vwTaskEm;
+
+	@DataContext("vw_obo_app_taskitem_task")
+	def vwTaskitemTaskEm;
+
+	@Service("DateService")
+	def dateSvc;
+
+	@ProxyMethod
+	public def getInfo(  def o )  {
+		def p = [:];
+		if(o.appno) p.appno = o.appno;
+		else if(o.trackingno) p.trackingno = o.trackingno;
+		else if(o.refno) p.appno = o.refno;
+		else if(o.objid) p.objid = o.objid;
+		def app = vwAppEm.find( p ).first();
+		if(!app) throw new Exception("Application "  + p + " not found");
+
+		def r = [:];
+		r.trackingno = app.trackingno;
+		r.appno = app.appno;
+		r.apptitle = app.doctitle;
+		r.appdate = app.appdate;		
+		r.txntype = app.txntype;
+		r.applicant = app.applicant;
+		r.title = app.title;
+		r.location = app.location;
+
+		def nowdate = dateSvc.getServerDate();
+
+		def df = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm");
+		def formatDate = { d->
+			if(d==null) return df.format( nowdate );
+			return df.format( d );
+		}
+
+		def sectionTasks = vwTaskitemTaskEm.find( [appid: app.objid ] ).list();
+
+		def fetchSections = { st->
+			def vsections = [];
+			def enddate = st.enddate!=null? st.enddate : nowdate;
+			def subTasks = sectionTasks.findAll{ it.dtcreated >= st.dtcreated &&  it.dtcreated < enddate  };
+			subTasks.each { ss->
+				vsections << [ title: ss.section + " " + ss.title, startdate: formatDate(ss.dtcreated), enddate: formatDate(ss.enddate), subtasks: []  ]
+			}
+
+			vsections = vsections.sort{ it.dtcreated };
+			/*
+			def s1 = [ title:"ZONING", status: "Completed", startdate: "2021-01-01 08:00", enddate: "2021-01-01 08:15", hours: 0.25, subtasks: [] ];
+			s1.subtasks << [ title:"Evaluation", status: "Completed", startdate: "2021-01-01 08:00", enddate: "2021-01-01 08:15", hours: 0.25 ]
+			s1.subtasks << [ title:"Review", status: "Completed", startdate: "2021-01-01 08:15", enddate: "2021-01-01 17:00", hours: 7 ]
+			s1.subtasks << [ title:"Approval", status: "Completed", startdate: "2021-01-01 17:00", enddate: "2021-01-02 10:30", hours: 0.75 ]
+			*/
+        	return vsections;
+		}
+
+		def tasks = vwTaskEm.find( [refid: app.objid] ).orderBy( "dtcreated" ).where("state NOT IN ('receiving', 'requirement-verification', 'requirement-revision')  ").list().collect{
+			[   
+				title: it.title, 
+				state:it.state, 
+				startdate: formatDate(it.dtcreated), 
+				enddate: formatDate(it.enddate), 
+				status: (it.enddate ==null) ? 'Ongoing' : 'Completed', 
+				hours: 0,
+				sections: fetchSections( it )
+			]	
+		};
+		r.tasks = tasks;
+		return r;
+
+		
+	}
+
+
+
+}

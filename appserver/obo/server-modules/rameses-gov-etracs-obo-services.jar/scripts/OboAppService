@@ -51,6 +51,15 @@ class OboAppService {
 	@Env
 	def env;
 
+	@ProxyMethod
+	public def findApp( def o  ) {
+		def app = vwAppEm.find( o ).first();
+		//this is to fix web based request. In the request only trackingno was specified;
+		if(!app) app = vwAppEm.find( [appno: o.trackingno] ).first();
+		if(!app) throw new Exception("Tracking no. or App No " + o.trackingno + " does not exist");
+		return app;
+	}
+
 
 	@ProxyMethod
 	public def assignAppno(def o ) {

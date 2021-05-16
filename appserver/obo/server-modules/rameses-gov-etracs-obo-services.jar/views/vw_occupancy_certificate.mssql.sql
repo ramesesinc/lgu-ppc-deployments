@@ -1,7 +1,6 @@
 if object_id('dbo.vw_occupancy_certificate', 'V') IS NOT NULL 
    drop view dbo.vw_occupancy_certificate; 
 go
-
 CREATE VIEW vw_occupancy_certificate AS 
 SELECT 
    a.*,

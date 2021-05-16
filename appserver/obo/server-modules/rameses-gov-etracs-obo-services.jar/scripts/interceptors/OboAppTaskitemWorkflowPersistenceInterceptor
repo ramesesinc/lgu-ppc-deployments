@@ -41,6 +41,7 @@ class OboAppTaskitemWorkflowPersistenceInterceptor {
 		}
 		replaceRole( r.state, r ); //replace also the role for this state
 		env._notificationList = [ "obo_app_taskitem:" + typeid.toLowerCase() ];
+
 	}
 
 	@After( pattern="WorkflowTaskService.assignToMe", eval="#{ args[0].processname == 'obo_app_taskitem' }" )
