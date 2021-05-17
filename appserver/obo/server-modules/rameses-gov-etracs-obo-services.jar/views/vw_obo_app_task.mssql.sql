@@ -1,4 +1,8 @@
-DROP VIEW IF EXISTS vw_obo_app_task;
+
+if object_id('dbo.vw_obo_app_task', 'V') IS NOT NULL 
+   drop view dbo.vw_obo_app_task; 
+go
+
 CREATE VIEW vw_obo_app_task AS 
 SELECT 
 t.taskid,
@@ -34,4 +38,5 @@ t.assignee_name,
 t.assignee_objid 
 FROM occupancy_certificate_task t
 INNER JOIN sys_wf_node wf ON wf.processname = 'occupancy_certificate' AND t.state = wf.name 
-AND wf.nodetype = 'state';
+AND wf.nodetype = 'state'
+go 
