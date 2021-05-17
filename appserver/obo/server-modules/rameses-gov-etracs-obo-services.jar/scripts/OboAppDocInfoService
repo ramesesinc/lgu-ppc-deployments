@@ -53,6 +53,9 @@ public class OboAppDocInfoService  {
 					lv.title = (arr.length>1) ? arr[1] : arr[0];
 					it.value = [ objid:it.lookupkey,key:lv.key, title:lv.title];							
 				}
+				else {
+					it.value = [ objid:'', key:'', title:'' ]; 
+				}				
 			}	
 			else it.value = it.stringvalue;
 		}
