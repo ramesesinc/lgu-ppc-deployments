@@ -568,6 +568,16 @@ where objid not in (
 )
 go 
 
+insert into obo_variable 
+select 
+	[objid], [state], [name], [caption], [description], [datatype], [doctypeid], [category], 
+	[sortorder], [system], [arrayvalues], [unit], [occupancytypeid], [lookuplistname], 0 as [multiselect]	
+from obo_puerto.dbo.obo_variable v 
+where objid not in ( 
+	select objid from obo_variable where objid = v.objid 
+)
+go 
+
 drop table ztmp_obo_variable
 go 
 
@@ -712,6 +722,10 @@ where objid not in (
 )
 go 
 
+INSERT INTO [dbo].[obo_doctype] ([objid], [title], [sectionid], [sortorder], [type], [template], [autocreate], [issuetype], [requirefee], [appnopattern], [controlnopattern], [subtypeof], [apptype], [system], [role], [endorserid], [approverid], [reportheader], [refdoc], [includeinemail]) 
+VALUES ('BFP_FIRE_SAFETY_CLEARANCE', 'BFP ELECTRICAL CLEARANCE', 'BFP', NULL, 'CLEARANCE', 'reports/bfp/fsce', '0', '3', '1', NULL, 'FSCECNO.R4B-[YYYYmm]-[%05d]', NULL, 'building', NULL, 'BFP_RELEASER', '8f07087:1765ef572b8:-7ffc', 'USR4ac8bf36:17645fd926a:-7c04', NULL, NULL, '1');
+
+
 -- insert docs. we'll have to insert ignore first since there are documents that cannot be added because they are in conflict
 select objid, appid, state, doctypeid, worktypes, remarks, amount, projectcost, equipmentcost
 into ztmp_obo_app_doc
@@ -732,10 +746,9 @@ from (
 	from ztmp_obo_app_doc
 	group by appid,doctypeid 
 	having count(*) = 1
-)tmp1, ztmp_obo_app_doc z, obo_doctype doc 
+)tmp1, ztmp_obo_app_doc z
 where z.appid = tmp1.appid 
 	and z.doctypeid = tmp1.doctypeid 
-	and doc.objid = z.doctypeid 
 go 
 
 insert into obo_app_doc (
@@ -752,10 +765,9 @@ from (
 		from ztmp_obo_app_doc
 		group by appid,doctypeid 
 		having count(*) > 1 
-	)tmp1, ztmp_obo_app_doc z, obo_doctype doc  
+	)tmp1, ztmp_obo_app_doc z 
 	where z.appid = tmp1.appid 
 		and z.doctypeid = tmp1.doctypeid 
-		and doc.objid = z.doctypeid 
 )tmp2, ztmp_obo_app_doc z 
 where z.objid = tmp2.objid 
 	and (tmp2.infocount + tmp2.feecount) > 0 
@@ -1867,3 +1879,8 @@ INNER JOIN obo_occupancy_type_division od ON ot.divisionid = od.objid
 INNER JOIN obo_occupancy_type_group og ON od.groupid = og.objid 
 LEFT JOIN obo_control ctl ON ctl.appid=a.objid AND ctl.doctypeid = 'OCCUPANCY_CERTIFICATE' 
 go 
+
+
+update obo_app_taskitem_task set state = 'approval' where state = 'evaluation-approval'
+go 
+
