@@ -1884,3 +1884,18 @@ go
 update obo_app_taskitem_task set state = 'approval' where state = 'evaluation-approval'
 go 
 
+
+
+insert into obo_itemaccount ( 
+	objid, title, doctypeid, item_objid, item_code, item_title, 
+	item_fund_objid, item_fund_title, sortorder, groupid, tag 
+) 
+select 
+	z.objid, z.title, z.doctypeid, z.item_objid, z.item_code, z.item_title, 
+	z.item_fund_objid, z.item_fund_title, z.sortorder, z.groupid, z.tag 
+from obo_puerto..obo_itemaccount z 
+	inner join obo_doctype doc on doc.objid = z.doctypeid 
+where z.objid not in (
+	select objid from obo_itemaccount where objid = z.objid
+)
+go 
