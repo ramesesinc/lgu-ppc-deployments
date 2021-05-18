@@ -1,12 +1,9 @@
 <schema>
 	<element tablename="building_permit" extends="obo_app">
 		<field name="objid" primary="true" prefix="OBOBP" visible="true"/>
-		<field name="apptype" required="true"/>
-
 		<field name="taskid" />
 
 		<!-- VALUES ARE SIMPLE OR COMPLEX -->
-		<field name="txntype" />
 		<field name="title" />
 		<field name="description" />
 		<field name="occupancytypeid" required="true"/>

@@ -2,10 +2,6 @@
 	<element tablename="occupancy_certificate" extends="obo_app">
 		<field name="objid" primary="true" prefix="OCCCERT" visible="true"/>
 
-		<!-- FULL OR PARTIAL -->
-		<field name="apptype" required="true"/>
-		<field name="txntype" />
-
 		<complex name="bldgpermit" ref="vw_building_permit" jointype="many-to-one" required="true">
 			<key field="bldgpermitid" target="objid" />
 		</complex>	

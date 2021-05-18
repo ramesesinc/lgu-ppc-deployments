@@ -2,8 +2,6 @@ DROP VIEW IF EXISTS vw_occupancy_certificate;
 CREATE VIEW vw_occupancy_certificate AS 
 SELECT 
    a.*,
-   op.apptype,
-   op.txntype,
    op.taskid,
    op.bldgpermitid,
    op.totalmaterialcost,
