@@ -20,6 +20,8 @@
 		<field name="contact_detail" />				
 		<field name="contact_email" />
 		<field name="contact_mobileno" />
+		<field name="apptype" />		
+		<field name="txntype" />
 
 		<field name="orgcode" />
 		<field name="doctypeid" required="true" />		

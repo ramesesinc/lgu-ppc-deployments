@@ -3,9 +3,7 @@ CREATE VIEW vw_building_permit AS
 SELECT 
    a.*,
 
-   bp.apptype,
    bp.taskid,
-   bp.txntype,
    bp.amount,
    bp.description,
    bp.title,

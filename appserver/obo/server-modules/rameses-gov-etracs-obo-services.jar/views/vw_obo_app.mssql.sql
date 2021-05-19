@@ -36,7 +36,7 @@ bt.state AS task_state,
 bt.assignee_objid AS task_assignee_objid,
 'building_permit' AS processname,
 'BUILDING PERMIT' AS doctitle,
-'vw_building_permit' AS schemaname 
+'vw_building_permit' AS schemaname
 from obo_app app 
    inner join building_permit bp on app.objid = bp.objid 
    inner join obo_app_entity be on app.applicantid = be.objid 
@@ -77,7 +77,7 @@ bt.state AS task_state,
 bt.assignee_objid AS task_assignee_objid,
 'occupancy_certificate' AS processname,
 'OCCUPANCY CERTIFICATE' AS doctitle,
-'vw_occupancy_certificate' AS schemaname 
+'vw_occupancy_certificate' AS schemaname
 from obo_app app 
    inner join occupancy_certificate oc on oc.objid = app.objid
    inner join building_permit bp on oc.bldgpermitid = bp.objid

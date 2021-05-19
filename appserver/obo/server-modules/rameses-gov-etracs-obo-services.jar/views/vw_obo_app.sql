@@ -59,7 +59,7 @@ SELECT
    'occupancy_certificate' AS processname,
    'OCCUPANCY CERTIFICATE' AS doctitle,
    'vw_occupancy_certificate' AS schemaname
-
+   
 FROM obo_app app
 INNER JOIN occupancy_certificate oc ON oc.objid = app.objid 
 INNER JOIN building_permit bp ON oc.bldgpermitid = bp.objid
