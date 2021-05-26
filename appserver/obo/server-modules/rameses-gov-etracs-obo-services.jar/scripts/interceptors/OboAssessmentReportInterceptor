@@ -24,22 +24,28 @@ class OboAssessmentReportInterceptor {
 
 		data.permittype =  data.doctitle ;
 
+		def fitems = feeEm.find([appid: objid]).list();
+		def unmappedList = fitems.findAll{ !it.item?.objid };
+		if(unmappedList) {
+			throw new Exception("Please map the ff. items first /n" + unmappedList*.title.join("/n") );
+		}
+
 		//group by fee group
 		def vitems = [];
-		def fitems = feeEm.find([appid: objid]).list();
 		fitems.groupBy{ it.item.item }.each {k,v->
-			vitems << [ item: k, 
-				feegroup: v.max{ it.item.feegroup }.item.feegroup,
+			def feegroup = v.find{ it.item.feegroupid!=null }.item.feegroup;
+			def m = [ 
+				item: k, 
+				section: feegroup?.title,
+				grouporder: feegroup?.sortindex,
 				sortorder: v.max{ it.item.sortorder }.item.sortorder, 
 				amount: v.sum{it.amount} 
 			];
+			vitems << m;
 		};
-		data.items = vitems.collect {
-			[ item: it.item, section: it.feegroup?.title, amount: it.amount, 
-				index1: it.feegroup.sortindex,
-				index2: it.sortorder 
-			]
-		}.sort{ [it.index1, it.index2] }
+
+		data.items = vitems.sort{ ( (it.grouporder==null?0:it.grouporder) * 1000 )+ (it.sortorder==null? 0: it.sortorder) };
+
 		data.dtfiled = dateSvc.getServerDate();
 		result.data = data;
 	}	

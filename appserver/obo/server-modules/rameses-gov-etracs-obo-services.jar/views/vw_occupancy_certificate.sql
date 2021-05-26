@@ -36,7 +36,9 @@ SELECT
    t.assignee_name AS task_assignee_name,
    t.actor_objid AS task_actor_objid,
    t.actor_name AS task_actor_name,
-   (SELECT title FROM sys_wf_node WHERE processname = 'occupancy_certificate' AND name=t.state) AS task_title,
+   sn.title AS task_title,
+   sn.tracktime AS task_tracktime,
+   sn.properties AS task_properties,
    ot.objid AS occupancytype_objid,
    ot.title AS occupancytype_title,   
    od.objid AS occupancytype_division_objid,
@@ -61,6 +63,7 @@ FROM obo_app a
 INNER JOIN occupancy_certificate op ON  a.objid = op.objid 
 INNER JOIN vw_building_permit bp ON op.bldgpermitid = bp.objid
 INNER JOIN occupancy_certificate_task t ON op.taskid = t.taskid
+INNER JOIN sys_wf_node sn ON sn.processname = 'occupancy_certificate' AND sn.name = t.state 
 INNER JOIN obo_occupancy_type ot ON op.occupancytypeid = ot.objid 
 INNER JOIN obo_occupancy_type_division od ON ot.divisionid = od.objid 
 INNER JOIN obo_occupancy_type_group og ON od.groupid = og.objid 

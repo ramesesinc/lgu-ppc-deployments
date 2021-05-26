@@ -96,6 +96,7 @@ class BuildingPermitPersistenceInterceptor {
 		//auto compute fees after opening:
 		a.amount = feeEm.find([appid:a.objid]).select("c:{SUM(amount)}").val();
 		a.payment = paymentEm.find([appid: a.objid ]).where("voided=0").orderBy("refdate DESC, refno DESC").first();
+
 	}
 
 	@Before(pattern="PersistenceService.removeEntity", eval="#{ args[0]._schemaname == 'building_permit' }")

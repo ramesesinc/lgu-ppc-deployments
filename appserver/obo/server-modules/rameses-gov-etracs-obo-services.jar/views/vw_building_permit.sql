@@ -59,6 +59,7 @@ SELECT
    t.actor_name AS task_actor_name,
    sn.title AS task_title,
    sn.tracktime AS task_tracktime,
+   sn.properties AS task_properties,
    pmt.objid AS controlid,
    pmt.controlno,
    pmt.expirydate,

@@ -79,10 +79,12 @@ class OboAppDocFormReportInterceptor {
 		docsub.location = app.location;
 		docsub.occupancytype = app.occupancytype;
 		docsub.appno = app.appno;
+		docsub.trackingno = app.trackingno;
 		docsub.apptype = app.apptype;
 
 		//this is dtfiled due to the reports
 		docsub.dtfiled = app.appdate;		
+		docsub.appdate = app.appdate;
 		docsub.permitno = app.controlno;
 		docsub.title = app.title;
 		docsub.numunits = app.numunits;
