@@ -85,7 +85,8 @@ class OboAppService {
 		appnoEm.create( test );
 
 		def u = [:];
-		u.appdate = dateSvc.getServerDate();
+		u.appdate = o.appdate;
+		if(!u.appdate) u.appdate = dateSvc.getServerDate();
 		u.appno = appno;
 		def appEm = db.lookup( app.appclass )
 		appEm.find( [objid: o.appid ] ).update( u );

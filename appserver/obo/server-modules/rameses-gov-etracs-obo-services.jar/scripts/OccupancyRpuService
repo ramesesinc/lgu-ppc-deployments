@@ -30,6 +30,8 @@ class OccupancyRpuService {
     public void activateTask(def o) {
     	if(!o.appid) throw new Exception("appid is required in OccupancyRpuService" );
 
+    	throw new Exception("activte obo rpu");
+
 		def exists = rpuEm.find( [appid: o.appid ]).exists();
 		if( !exists ) {
 			def m = [:];
