@@ -38,7 +38,7 @@ class OccupancyInspectionScheduleService {
     	def emails = var.obo_inspection_calendar_group.replace("\n","").split(";").toList();
     	if(!emails) throw new Exception("Please specify at least one email in obo_inspection_calendar_group");
     	emails << app.contact.email;
-    	emails = emails.unique();
+    	emails = emails.findAll{!!it}.unique();
 
         def tmp = templateEm.find( [objid: "obo_app_inspection_schedule" ]).first();
         if(!tmp) throw new Exception("Please specify obo_app_inspection_schedule in email template");
