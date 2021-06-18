@@ -105,6 +105,7 @@ public class OboAppFeeService  {
 			else if( it.datatype == "integer" ) factBuilder.facts << new OboIntegerInfo(it);
 			else if( it.datatype == "boolean" ) factBuilder.facts << new OboBooleanInfo(it);
 			else if( it.datatype == "lookup" )  factBuilder.facts << new OboLookupInfo(it);
+			else factBuilder.facts << new OboStringInfo(it);			
 		}
 	}
 
